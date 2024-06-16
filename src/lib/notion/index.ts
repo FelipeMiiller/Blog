@@ -4,56 +4,59 @@ import { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoint
 type WithAuth<P> = P & {
   auth?: string
 }
+
+type properties = {
+  [key: string]: {
+    id: string
+    type: string
+    created_time: string
+    last_edited_time?: string
+    checkbox?: boolean
+    multi_select: { id: string; name: string; color: string }[]
+    people?: {
+      object: string
+      id: string
+      name: string
+      avatar_url: string
+      type: string
+      person: { email: string }
+    }[]
+    rich_text: {
+      type: string
+      text: { content: string; link: null }
+      annotations: {
+        bold: boolean
+        italic: boolean
+        strikethrough: boolean
+        underline: boolean
+        code: boolean
+        color: string
+      }
+      plain_text: string
+      href: null
+    }[]
+    title: {
+      type: string
+      text: { content: string; link: null }
+      annotations: {
+        bold: boolean
+        italic: boolean
+        strikethrough: boolean
+        underline: boolean
+        code: boolean
+        color: string
+      }
+      plain_text: string
+      href: string
+    }[]
+  }
+}
+
 type Page = {
   id: string
-  properties: {
-    [key: string]: {
-      id: string
-      type: string
-      created_time: string
-      last_edited_time?: string
-      checkbox?: boolean
-      multi_select: { id: string; name: string; color: string }[]
-      people?: {
-        object: string
-        id: string
-        name: string
-        avatar_url: string
-        type: string
-        person: { email: string }
-      }[]
-      rich_text: {
-        type: string
-        text: { content: string; link: null }
-        annotations: {
-          bold: boolean
-          italic: boolean
-          strikethrough: boolean
-          underline: boolean
-          code: boolean
-          color: string
-        }
-        plain_text: string
-        href: null
-      }[]
-      title: {
-        type: string
-        text: { content: string; link: null }
-        annotations: {
-          bold: boolean
-          italic: boolean
-          strikethrough: boolean
-          underline: boolean
-          code: boolean
-          color: string
-        }
-        plain_text: string
-        href: string
-      }[]
-    }
-  }
   url: string
   public_url: string
+  properties: properties
 }
 export type NormalizeResponseQuery = {
   page: string
@@ -89,17 +92,14 @@ class Notion implements Notion {
     } catch (error) {
       if (error instanceof APIResponseError) {
         const { name, code, message, status } = error
-
-        console.log(message)
       }
       throw error
     }
   }
-
   private normalizeResponseQuery(rows: NotionQueryResponse): NormalizeResponseQuery[] {
     return rows.map((row) => ({
       page: row.id,
-      title: row.properties?.Page.title[0].text.content ,
+      title: row.properties?.Page.title[0].text.content,
       updated: row.properties?.Updated.last_edited_time,
       created: row.properties?.Updated.created_time,
       description: row.properties?.Description.rich_text[0].text.content,

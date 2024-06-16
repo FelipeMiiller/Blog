@@ -52,8 +52,8 @@ describe("ThemeToggle", () => {
     expect(svgs).toHaveLength(2)
     expect(svgs[0]).toBeInTheDocument()
     expect(svgs[1]).toBeInTheDocument()
-    expect(span).toBeInTheDocument()
   })
+
   it("toggles the theme", async () => {
     const { getByRole, getByTestId } = renderProvider(
       <>

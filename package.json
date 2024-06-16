@@ -18,8 +18,7 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "yarn lint:fix",
-      "yarn test:changed",
-      "yarn format:write"
+      "yarn test:changed"
     ]
   },
   "husky": {
@@ -48,9 +47,11 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
+    "encoding": "^0.1.13",
     "github-slugger": "^2.0.0",
     "next": "13.4.19",
     "next-themes": "^0.2.1",
+    "node-fetch": "^3.3.2",
     "postcss": "8.4.29",
     "react": "18.2.0",
     "react-day-picker": "^8.8.2",

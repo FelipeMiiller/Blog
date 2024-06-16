@@ -19,36 +19,40 @@ export function MainNav({ items, titlePre }: MainNavProps) {
     <>
       <div className="flex gap-6 md:gap-10 items-center">
         <Link href="/">
-          <span className={cn("inline-block font-bold  md:text-4xl  sm:text-2xl text-xl   ", fontCaveat.className)}>
+          <span
+            className={cn(
+              "inline-block font-bold  md:text-4xl  sm:text-2xl text-xl",
+              fontCaveat.className
+            )}
+          >
             {homeConfig.name}
           </span>
         </Link>
-
       </div>
-
       <nav className="flex items-center space-x-2">
         {items?.length ? (
           <div className="flex gap-6">
             {items?.map(
               (item) =>
                 item.href && (
-                  <Link key={item.title} href={item.href}  >
-
+                  <Link key={item.title} href={item.href}>
                     <span
                       className={cn(
                         "flex  text-sm font-medium hover:opacity-80 ",
                         item.disabled && "cursor-not-allowed opacity-80",
                         titlePre === item.title && "uppercase"
-                      )} aria-label={item.title}
+                      )}
+                      aria-label={item.title}
                     >
-
                       {item.title}
                     </span>
                   </Link>
                 )
             )}
           </div>
-        ) : <></>}
+        ) : (
+          <></>
+        )}
         <Link href={homeConfig.links.github} target="_blank" rel="noreferrer">
           <div
             className={ButtonUi.Variants({

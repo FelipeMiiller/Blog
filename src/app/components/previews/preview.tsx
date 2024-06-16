@@ -23,7 +23,6 @@ const Preview = ({ post }: { post: PropsPreview }) => {
       <li className="py-12 px-2">
         <article>
           <div className="space-y-2 xl:grid xl:grid-cols-5 xl:items-baseline xl:space-y-0 ">
-            
             <dl>
               <dt className="sr-only">Published on</dt>
               <dd className="text-base font-medium leading-6   text-muted-foreground ">

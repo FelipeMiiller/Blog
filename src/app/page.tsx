@@ -1,48 +1,28 @@
-import Link from "next/link"
-import { Icons, ThemeToggle } from "@/components"
+import { cn } from "@/util/utils"
 
-import { homeConfig } from "@/config/site"
-import { ButtonUi } from "@/components/ui"
+import { fontCaveat } from "@/styles/fonts"
 
-import { Header } from "./components"
+import { Header, Previews } from "./components"
 
 export default function IndexPage() {
   return (
     <>
-      <Header />
-      <div className="flex flex-1">
-        <section className="container h-1/2 flex  justify-center flex-col items-center gap-3  my-auto ">
-          <div className=" max-w-[980px] grid content-center  gap-3  ">
-            <div className="text-3xl font-extrabold text-center leading-tight tracking-tighter md:text-4xl ">
-              <h1>A Template for Next.js</h1>
-              <h1>Built with Radix UI and Tailwind CSS.</h1>
-            </div>
-            <p className="max-w-[700px] text-lg text-center text-muted-foreground">
-              For agile developers .
-            </p>
+      <Header titlePre="Home" />
+     
+        <div className="divide-y-2 divide-tertiary">
+          <div className="space-y-2 pb-8 pt-6 md:space-y-5">
+            <h1
+              className={cn(
+                "text-3xl font-extrabold leading-9 tracking-tight  sm:text-4xl sm:leading-10 md:text-6xl md:leading-14",
+                fontCaveat.className
+              )}
+            >
+              Latest posts
+            </h1>
           </div>
-          <div className="flex flex-1 items-center justify-center ">
-            <nav className="flex items-center space-x-1">
-              <Link
-                href={homeConfig.links.github}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div
-                  className={ButtonUi.Variants({
-                    size: "icon",
-                    variant: "ghost",
-                  })}
-                >
-                  <Icons.gitHub className="h-5 w-5" />
-                  <span className="sr-only">GitHub</span>
-                </div>
-              </Link>
-              <ThemeToggle />
-            </nav>
-          </div>
-        </section>
-      </div>
+          <Previews />
+        </div>
+      
     </>
   )
 }

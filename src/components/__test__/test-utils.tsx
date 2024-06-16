@@ -18,10 +18,7 @@ const createTestProviders =
     </ThemeProvider>
   )
 
-const customRender = (
-  ui: ReactElement,
-  { theme, ...options }: CustomOptions = {}
-): RenderResult =>
+const customRender = (ui: ReactElement, { theme, ...options }: CustomOptions = {}): RenderResult =>
   render(ui, { wrapper: createTestProviders({ theme }), ...options })
 
 // re-export everything

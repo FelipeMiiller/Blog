@@ -1,19 +1,30 @@
 export type HomeConfig = typeof homeConfig
+export type SiteConfig = typeof siteConfig
 
 export const homeConfig = {
-  name: "Next.js",
-  description: "Template for Next.js 13 with Tailwind CSS.",
+  name: "Felipe Miiller",
+  description: "Blog pessoal de Felipe Miiller",
+  language: "pt-br",
+  limitePreviews: 5,
   mainNav: [
     {
-      title: "Dashboard",
-      href: "/dashboard",
+      title: "Home",
+      href: "/",
     },
     {
-      title: "Tasks",
-      href: "/tasks",
+      title: "Blog",
+      href: "/blog",
+    },
+    {
+      title: "Sobre",
+      href: "/sobre",
     },
   ],
   links: {
-    github: "https://github.com/FelipeMiiller/nextjs-template",
+    github: "https://github.com/FelipeMiiller",
   },
+}
+
+export const siteConfig = {
+  dataBasePosts: process.env.NOTION_DATABASE_POSTS_ID,
 }

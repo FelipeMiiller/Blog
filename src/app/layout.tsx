@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   ],
   icons: {
     icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.png",
+    apple: "/apple-touc.png",
   },
 }
 
@@ -31,18 +31,11 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
-      <html lang="en" suppressHydrationWarning>
+      <html lang={homeConfig.language} suppressHydrationWarning>
         <head />
-        <body
-          className={cn(
-            "min-h-screen  flex   bg-background font-sans antialiased",
-            fontSans.variable
-          )}
-        >
+        <body className={cn("min-h-screen  flex bg-background  antialiased", fontSans.variable)}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <div className="relative flex-1 flex min-h-screen flex-col">
-              {children}
-            </div>
+            <div className="flex h-screen flex-col  font-sans flex-1  container px-2 max-w-6xl">{children}</div>
             <TailwindIndicator />
           </ThemeProvider>
         </body>

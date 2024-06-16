@@ -28,9 +28,7 @@ describe("ThemeToggle", () => {
       dispatchEvent: jest.fn(),
     }))
 
-    global.Storage.prototype.getItem = jest.fn(
-      (key: string) => localStorageMock[key]
-    )
+    global.Storage.prototype.getItem = jest.fn((key: string) => localStorageMock[key])
     global.Storage.prototype.setItem = jest.fn((key: string, value: string) => {
       localStorageMock[key] = value
     })

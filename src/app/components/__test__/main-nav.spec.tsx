@@ -3,7 +3,7 @@ import "@testing-library/jest-dom"
 import React from "react"
 import { render, screen } from "@testing-library/react"
 
-import { MainNav } from "../main-nav"
+import { MainNav } from "../header/main-nav"
 
 describe("MainNav", () => {
   it("renders the logo and name", () => {
@@ -41,9 +41,7 @@ describe("MainNav", () => {
     const disabledLink = screen.getByText("Item 2")
     expect(disabledLink).toBeInTheDocument()
     expect(disabledLink.textContent).toBe("Item 2")
-    expect(disabledLink).toHaveClass(
-      "flex items-center text-sm font-medium text-muted-foreground"
-    )
+    expect(disabledLink).toHaveClass("flex items-center text-sm font-medium text-muted-foreground")
   })
 
   it("does not render navigation when items prop is empty", () => {

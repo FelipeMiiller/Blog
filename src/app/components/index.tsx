@@ -1,4 +1,4 @@
 import { Header } from "./header"
-import { MainNav } from "./main-nav"
+import Previews from "./previews"
 
-export { Header, MainNav }
+export { Header, Previews }

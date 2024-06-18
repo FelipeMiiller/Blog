@@ -1,13 +1,10 @@
 import * as React from "react"
 import Link from "next/link"
-import { Icons, ThemeToggle } from "@/components"
+import {  SocialIcon, ThemeToggle } from "@/components"
 import { cn } from "@/util/utils"
-
-import { homeConfig } from "@/config/site"
-import { ButtonUi } from "@/components/ui"
-import { fontCaveat } from "@/styles/fonts"
-
 import { NavItem } from "../../../types/nav"
+import { siteMetadata } from "@/config/site"
+
 
 interface MainNavProps {
   items?: NavItem[]
@@ -16,19 +13,6 @@ interface MainNavProps {
 
 export function MainNav({ items, titlePre }: MainNavProps) {
   return (
-    <>
-      <div className="flex gap-6 md:gap-10 items-center">
-        <Link href="/">
-          <span
-            className={cn(
-              "inline-block font-bold  md:text-4xl  sm:text-2xl text-xl",
-              fontCaveat.className
-            )}
-          >
-            {homeConfig.name}
-          </span>
-        </Link>
-      </div>
       <nav className="flex items-center space-x-2">
         {items?.length ? (
           <div className="flex gap-6">
@@ -53,19 +37,10 @@ export function MainNav({ items, titlePre }: MainNavProps) {
         ) : (
           <></>
         )}
-        <Link href={homeConfig.links.github} target="_blank" rel="noreferrer">
-          <div
-            className={ButtonUi.Variants({
-              size: "icon",
-              variant: "ghost",
-            })}
-          >
-            <Icons.gitHub className="h-5 w-5" />
-            <span className="sr-only">GitHub</span>
-          </div>
-        </Link>
+  
+        <SocialIcon kind="github" href={siteMetadata.links.github} size={5} />
         <ThemeToggle />
       </nav>
-    </>
+    
   )
 }

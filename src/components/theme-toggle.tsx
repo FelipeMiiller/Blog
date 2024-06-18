@@ -2,10 +2,9 @@
 
 import * as React from "react"
 import { cn } from "@/util/utils"
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons"
 import { useTheme } from "next-themes"
-
 import { Button } from "@/components/ui/button"
+import { Icons } from "./icons/icons"
 
 export function ThemeToggle({ text = null }: { text?: string | null }) {
   const { setTheme, theme } = useTheme()
@@ -19,8 +18,8 @@ export function ThemeToggle({ text = null }: { text?: string | null }) {
     >
       {text}
 
-      <SunIcon name="icon-sun" className="h-[1.5rem] w-[1.3rem] dark:hidden" />
-      <MoonIcon name="icon-moon" className="hidden h-5 w-5 dark:block" />
+      <Icons.sun name="icon-sun" className="h-[1.5rem] w-[1.3rem] dark:hidden" />
+      <Icons.moon name="icon-moon" className="hidden h-5 w-5 dark:block" />
     </Button>
   )
 }

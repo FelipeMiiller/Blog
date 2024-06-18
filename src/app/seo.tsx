@@ -1,34 +1,37 @@
+import { Metadata } from "next"
 
-import { siteMetadata } from '@/config/site'
-import { Metadata } from 'next'
-
+import { siteMetadata } from "@/config/site"
 
 interface PageSEOProps {
   title: string
   description?: string
   image?: string
   locale?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
-
 }
 
-export function genPageMetadata({ title, description, image,locale, ...rest }: PageSEOProps): Metadata {
+export function genPageMetadata({
+  title,
+  description,
+  image,
+  locale,
+  ...rest
+}: PageSEOProps): Metadata {
   return {
-    title ,
+    title,
     description: description || siteMetadata.description,
     openGraph: {
       title: `${title} | ${siteMetadata.title}`,
       description: description || siteMetadata.description,
-      url: './',
+      url: "./",
       siteName: siteMetadata.title,
       images: image ? [image] : [siteMetadata.socialBanner],
-      locale: locale || 'pt-BR',
-      type: 'website',
+      locale: locale || "pt-BR",
+      type: "website",
     },
     twitter: {
       title: `${title} | ${siteMetadata.title}`,
-      card: 'summary_large_image',
+      card: "summary_large_image",
       images: image ? [image] : [siteMetadata.socialBanner],
     },
     ...rest,

@@ -1,22 +1,15 @@
 import Link from "next/link"
-import Preview, { PropsPreview } from "./components/preview"
 import { cn } from "@/util/utils"
+
 import { fontCaveat } from "@/styles/fonts"
 
-
-
+import Preview, { PropsPreview } from "./components/preview"
 
 interface ListLayoutProps {
   posts: PropsPreview[]
-
-
 }
 
-
-
-
 export default async function ListLayoutt({ posts }: ListLayoutProps) {
-
   return (
     <>
       <div className="divide-y-2 divide-tertiary">
@@ -33,23 +26,15 @@ export default async function ListLayoutt({ posts }: ListLayoutProps) {
         <ul className="divide-y-2 divide-tertiary">
           {!posts.length && "No posts found."}
           {posts.map((post) => {
-
             return <Preview post={post} key={post.slug} />
           })}
         </ul>
       </div>
       <div className="flex justify-end text-base font-medium leading-6">
-    
-        <Link
-          href="/blog"
-          className="text-primary hover:text-primary/80 "
-          aria-label="All posts"
-        >
+        <Link href="/blog" className="text-primary hover:text-primary/80 " aria-label="All posts">
           All Posts &rarr;
         </Link>
       </div>
     </>
-
-
   )
 }

@@ -1,5 +1,4 @@
-import { Header } from "./header"
-import Previews from "../../layouts/previews/previews"
 import Footer from "./Footer"
+import { Header } from "./header"
 
-export { Header,Footer}
+export { Header, Footer }

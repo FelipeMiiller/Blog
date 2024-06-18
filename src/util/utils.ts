@@ -5,9 +5,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-type formateDate = (date: string | Date, locale?: string ) => string
+type formateDate = (date: string | Date, locale?: string) => string
 
-export const formateDate: formateDate =(date, locale = "pt-BR") =>{
+export const formateDate: formateDate = (date, locale = "pt-BR") => {
   const handlerDate = new Date(date)
 
   return handlerDate.toLocaleString(locale, {

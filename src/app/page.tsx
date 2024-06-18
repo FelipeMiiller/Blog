@@ -1,8 +1,7 @@
-import { ListLayout } from "@/layouts"
-import { Footer, Header } from "./components"
 import { getSProps_PostsInOrderForPublished } from "@/data/notion/posts"
+import { ListLayout } from "@/layouts"
 
-
+import { Footer, Header } from "./components"
 
 export default async function IndexPage() {
   let {
@@ -13,7 +12,7 @@ export default async function IndexPage() {
   return (
     <>
       <Header titlePre="Home" />
-      <ListLayout posts={posts}  />
+      <ListLayout posts={posts} />
       <Footer />
     </>
   )

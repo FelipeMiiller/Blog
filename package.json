@@ -18,7 +18,8 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "yarn lint:fix",
-      "yarn test:changed"
+      "yarn test:changed",
+      "format:write"
     ]
   },
   "husky": {

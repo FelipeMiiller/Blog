@@ -1,17 +1,15 @@
+import { getSProps_PostsInOrderForPublished } from "@/data/notion/posts"
+import { ListLayoutWithTags } from "@/layouts"
 
+import { Footer, Header } from "../components"
+import { genPageMetadata } from "../seo"
 
-
-import { genPageMetadata } from '../seo'
-import { Footer, Header } from '../components'
-import { getSProps_PostsInOrderForPublished } from '@/data/notion/posts'
-import { ListLayoutWithTags } from '@/layouts'
-
-
-
-export const metadata = genPageMetadata({ title: 'Blog' })
+export const metadata = genPageMetadata({ title: "Blog" })
 
 export default async function BlogPage() {
-  const {props: { posts, posts_per_page }} = await getSProps_PostsInOrderForPublished()
+  const {
+    props: { posts, posts_per_page },
+  } = await getSProps_PostsInOrderForPublished()
 
   const pageNumber = 1
   const initialDisplayPosts = posts.slice(
@@ -33,7 +31,6 @@ export default async function BlogPage() {
         title="All Posts"
       />
       <Footer />
-
     </>
   )
 }

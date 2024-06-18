@@ -1,12 +1,12 @@
-'use client'
-import Link from 'next/link'
-import { formateDate } from '@/util/utils'
-import { Pagination } from '@/components'
-import { NormalizeResponseQuery } from '@/data/notion'
-import { siteMetadata } from '@/config/site'
-import { usePathname } from 'next/navigation'
+"use client"
 
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { Pagination } from "@/components"
+import { NormalizeResponseQuery } from "@/data/notion"
+import { formateDate } from "@/util/utils"
 
+import { siteMetadata } from "@/config/site"
 
 interface ListLayoutProps {
   posts: NormalizeResponseQuery[]
@@ -18,19 +18,25 @@ interface ListLayoutProps {
   }
 }
 
-
-export default function ListLayoutWithTags({ posts, title, initialDisplayPosts = [], pagination, }: ListLayoutProps) {
-
+export default function ListLayoutWithTags({
+  posts,
+  title,
+  initialDisplayPosts = [],
+  pagination,
+}: ListLayoutProps) {
   const pathname = usePathname()
-  const tagCounts = posts.reduce((acc: { [key: string]: { count: number, slug: string } }, post) => {
-    post.tags.forEach((tag) => {
-      acc[tag.name] = {
-        count: ((acc[tag.name]?.count || 0) + 1),
-        slug: tag.slug
-      };
-    });
-    return acc;
-  }, {});
+  const tagCounts = posts.reduce(
+    (acc: { [key: string]: { count: number; slug: string } }, post) => {
+      post.tags.forEach((tag) => {
+        acc[tag.name] = {
+          count: (acc[tag.name]?.count || 0) + 1,
+          slug: tag.slug,
+        }
+      })
+      return acc
+    },
+    {}
+  )
 
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b].count - tagCounts[a].count)
@@ -47,21 +53,18 @@ export default function ListLayoutWithTags({ posts, title, initialDisplayPosts =
         <div className="flex sm:space-x-24">
           <div className="hidden h-full max-h-screen min-w-[280px] max-w-[280px] flex-wrap overflow-auto rounded bg-muted/80  sm:flex">
             <div className="px-6 py-4">
-              {pathname.startsWith('/blog') ? (
+              {pathname.startsWith("/blog") ? (
                 <h3 className="font-bold uppercase text-primary-500">All Posts</h3>
               ) : (
-                <Link
-                  href={`/blog`}
-                  className="font-bold uppercase  hover:text-primary/80  "
-                >
+                <Link href={`/blog`} className="font-bold uppercase  hover:text-primary/80  ">
                   All Posts
                 </Link>
               )}
               <ul>
                 {sortedTags.map((t) => {
                   return (
-                    <li key={t} className="my-3">
-                      {pathname.split('/tags/')[1] === tagCounts[t].slug ? (
+                    <li key={tagCounts[t].slug} className="my-3">
+                      {pathname.split("/tags/")[1] === tagCounts[t].slug ? (
                         <h3 className="inline px-3 py-2 text-sm font-bold uppercase  text-primary/50 ">
                           {`${t} (${tagCounts[t].count})`}
                         </h3>
@@ -93,34 +96,40 @@ export default function ListLayoutWithTags({ posts, title, initialDisplayPosts =
                         <dd className="text-base font-medium leading-6   text-muted-foreground ">
                           {updated ? (
                             <>
-                              <time dateTime={post.updated}>{formateDate(updated, siteMetadata.language)}</time>
+                              <time dateTime={post.updated}>
+                                {formateDate(updated, siteMetadata.language)}
+                              </time>
                             </>
                           ) : (
                             <>
-                              <time dateTime={post.updated}>{formateDate(created, siteMetadata.language)}</time>
+                              <time dateTime={post.updated}>
+                                {formateDate(created, siteMetadata.language)}
+                              </time>
                             </>
                           )}
                         </dd>
                       </dl>
                       <div className="space-y-3">
                         <div>
-                          <h2 className="text-2xl font-bold leading-8 tracking-tight"  >
+                          <h2 className="text-2xl font-bold leading-8 tracking-tight">
                             <Link href={`/blog/${slug}`} aria-label={`Read more: "${title}"`}>
                               {title}
                             </Link>
                           </h2>
                           <div className="flex flex-wrap">
-                            {tags?.map((tag) => <Link
-                              href={`/tags/${tag.slug}`}
-                              className="mr-3 text-base font-medium  text-primary hover:text-primary/80">
-                              {tag.name}
-                            </Link>)}
+                            {tags?.map((tag) => (
+                              <Link
+                                key={tag.id}
+                                href={`/tags/${tag.slug}`}
+                                className="mr-3 text-base font-medium  text-primary hover:text-primary/80"
+                              >
+                                {tag.name}
+                              </Link>
+                            ))}
                           </div>
                         </div>
                         <div className="prose max-w-none text-muted-foreground marker:text-accent-foreground ">
-                          <p>
-                            {description}
-                          </p>
+                          <p>{description}</p>
                         </div>
                       </div>
                     </article>

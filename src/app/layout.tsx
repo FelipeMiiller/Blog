@@ -3,10 +3,9 @@ import "@/styles/globals.css"
 import { Metadata } from "next"
 import { TailwindIndicator, ThemeProvider } from "@/components"
 import { cn } from "@/util/utils"
+
 import { siteMetadata } from "@/config/site"
 import { fontSans } from "@/styles/fonts"
-
-
 
 export const metadata: Metadata = {
   title: {

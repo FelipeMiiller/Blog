@@ -77,7 +77,7 @@ export type NormalizeResponseQuery = {
     type: string
     person: { email: string }
   }[]
-  tags: { id: string; name: string; color: string, slug: string }[]
+  tags: { id: string; name: string; color: string; slug: string }[]
 }
 
 export type NotionQueryResponse = Array<Page>
@@ -118,12 +118,12 @@ class Notion implements Notion {
       updated: row.properties?.Updated.last_edited_time,
       created: row.properties?.Created.created_time,
       description: row.properties?.Description.rich_text[0].text.content,
-      tags:  (row.properties?.Categories.multi_select).map((item) => ({
+      tags: (row.properties?.Categories.multi_select).map((item) => ({
         id: item.id,
         name: item.name,
         color: item.color,
         slug: new GithubSlugger().slug(item.name),
-      }))
+      })),
     }))
   }
 }

@@ -4,15 +4,15 @@ import { Metadata } from "next"
 import { TailwindIndicator, ThemeProvider } from "@/components"
 import { cn } from "@/util/utils"
 
-import { homeConfig } from "@/config/site"
+import { siteMetadata } from "@/config/site"
 import { fontSans } from "@/styles/fonts"
 
 export const metadata: Metadata = {
   title: {
-    default: homeConfig.name,
-    template: `%s - ${homeConfig.name}`,
+    default: siteMetadata.author,
+    template: `%s - ${siteMetadata.author}`,
   },
-  description: homeConfig.description,
+  description: siteMetadata.description,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
@@ -31,7 +31,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
-      <html lang={homeConfig.language} suppressHydrationWarning>
+      <html lang={siteMetadata.language} suppressHydrationWarning>
         <head />
         <body className={cn("min-h-screen  flex bg-background  antialiased", fontSans.variable)}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

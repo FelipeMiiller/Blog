@@ -1,23 +1,19 @@
 import Link from "next/link"
-import { formateDate } from "@/util/formateDate"
-import GithubSlugger from "github-slugger"
+import { formateDate } from "@/util/utils"
 
-import Tag from "./tag"
+import { siteMetadata } from "@/config/site"
 
 export type PropsPreview = {
+  slug: string
   page: string
-
   title: string
   created: string
   updated?: string
   description: string
-  tags: { name: string; id: string }[]
+  tags: { name: string; id: string; color: string; slug: string }[]
 }
 
 const Preview = ({ post }: { post: PropsPreview }) => {
-  const slugger = new GithubSlugger()
-  const slug = slugger.slug(post.title)
-
   return (
     <>
       <li className="py-12 px-2">
@@ -28,7 +24,9 @@ const Preview = ({ post }: { post: PropsPreview }) => {
               <dd className="text-base font-medium leading-6   text-muted-foreground ">
                 {post.updated ? (
                   <>
-                    <time dateTime={post.updated}>{formateDate(post.updated)}</time>
+                    <time dateTime={post.updated}>
+                      {formateDate(post.updated, siteMetadata.language)}
+                    </time>
                   </>
                 ) : (
                   <>
@@ -40,25 +38,30 @@ const Preview = ({ post }: { post: PropsPreview }) => {
             <div className="space-y-5 xl:col-span-4 ">
               <div className="space-y-6">
                 <div>
-                  <h2
-                    className="text-2xl font-bold leading-8 tracking-tight  "
-                    aria-label={`Read more: "${post.title}"`}
-                  >
-                    <Link href={`/blog/${slug}`}>{post.title}</Link>
+                  <h2 className="text-2xl font-bold leading-8 tracking-tight">
+                    <Link href={`/blog/${post.slug}`} aria-label={`Read more: "${post.title}"`}>
+                      {post.title}
+                    </Link>
                   </h2>
                   <div className="flex flex-wrap">
-                    {post.tags.map((tag: any) => (
-                      <Tag key={tag.id} text={tag.name} />
+                    {post.tags.map((tag) => (
+                      <Link
+                        key={tag.id}
+                        href={`/tags/${tag.slug}`}
+                        className="mr-3 text-base font-medium  text-primary hover:text-primary/80"
+                      >
+                        {tag.name}
+                      </Link>
                     ))}
                   </div>
                 </div>
-                <p className="prose max-w-none text-muted-foreground marker:text-accent-foreground ">
-                  {post.description}
-                </p>
+                <div className="prose max-w-none text-muted-foreground marker:text-accent-foreground ">
+                  <p>{post.description}</p>
+                </div>
               </div>
               <div>
                 <Link
-                  href={`/blog/${slug}`}
+                  href={`/blog/${post.slug}`}
                   className="text-base font-medium leading-6 text-primary hover:text-primary/80"
                   aria-label={`Read more: "${post.title}"`}
                 >

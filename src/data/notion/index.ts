@@ -1,5 +1,8 @@
 import { APIResponseError, Client } from "@notionhq/client"
 import { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints"
+import GithubSlugger from "github-slugger"
+
+import { siteConfigs } from "@/config/site"
 
 type WithAuth<P> = P & {
   auth?: string
@@ -13,7 +16,7 @@ type properties = {
     last_edited_time?: string
     checkbox?: boolean
     multi_select: { id: string; name: string; color: string }[]
-    people?: {
+    people: {
       object: string
       id: string
       name: string
@@ -21,6 +24,7 @@ type properties = {
       type: string
       person: { email: string }
     }[]
+
     rich_text: {
       type: string
       text: { content: string; link: null }
@@ -59,12 +63,21 @@ type Page = {
   properties: properties
 }
 export type NormalizeResponseQuery = {
+  slug: string
   page: string
   title: string
   created: string
   updated?: string
   description: string
-  tags: { id: string; name: string; color: string }[]
+  authors: {
+    object: string
+    id: string
+    name: string
+    avatar_url: string
+    type: string
+    person: { email: string }
+  }[]
+  tags: { id: string; name: string; color: string; slug: string }[]
 }
 
 export type NotionQueryResponse = Array<Page>
@@ -76,8 +89,8 @@ interface Notion {
 }
 
 class Notion implements Notion {
-  readonly databaseId = process.env.NOTION_DATABASE_POSTS_ID as string
-  constructor(protected notion = new Client({ auth: process.env.NOTION_API_KEY })) {}
+  readonly databaseId = siteConfigs.notion.dataBasePosts as string
+  constructor(protected notion = new Client({ auth: siteConfigs.notion.apiKey })) {}
 
   async query(
     args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">
@@ -87,7 +100,7 @@ class Notion implements Notion {
         database_id: this.databaseId,
         ...args,
       })
-      results
+
       return this.normalizeResponseQuery(results as unknown as NotionQueryResponse)
     } catch (error) {
       if (error instanceof APIResponseError) {
@@ -98,12 +111,19 @@ class Notion implements Notion {
   }
   private normalizeResponseQuery(rows: NotionQueryResponse): NormalizeResponseQuery[] {
     return rows.map((row) => ({
+      slug: new GithubSlugger().slug(row.properties?.Page.title[0].text.content),
       page: row.id,
+      authors: row.properties?.Authors.people,
       title: row.properties?.Page.title[0].text.content,
       updated: row.properties?.Updated.last_edited_time,
-      created: row.properties?.Updated.created_time,
+      created: row.properties?.Created.created_time,
       description: row.properties?.Description.rich_text[0].text.content,
-      tags: row.properties?.Categories.multi_select,
+      tags: (row.properties?.Categories.multi_select).map((item) => ({
+        id: item.id,
+        name: item.name,
+        color: item.color,
+        slug: new GithubSlugger().slug(item.name),
+      })),
     }))
   }
 }

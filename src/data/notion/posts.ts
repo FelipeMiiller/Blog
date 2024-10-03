@@ -63,10 +63,14 @@ export async function getSParams_Posts() {
     },
   })
   titles
+  const postsPaths = titles.map((post) => ({
+    params: { slug: [post.slug] },
+  }))
 
   const totalPages = Math.ceil(titles.length / POSTS_PER_PAGE)
   const paths = Array.from({ length: totalPages }, (_, i) => ({ page: (i + 1).toString() }))
-  return paths
+
+  return [...paths, ...postsPaths]
 }
 
 export async function getPostWithMarkdown(id: string): Promise<string | null> {

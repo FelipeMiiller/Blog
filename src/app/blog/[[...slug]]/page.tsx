@@ -1,3 +1,4 @@
+import { Fragment } from "react"
 import { Metadata } from "next"
 import {
   getPostsInOrderForPublished,
@@ -44,11 +45,11 @@ export default async function BlogPage({ params }: { params: { slug?: string[] }
 
   if (!slug || slug[0] !== "post") {
     return (
-      <>
+      <Fragment>
         <Header titlePre="Blog" />
         <ListLayoutWithTags slug={params.slug} postsData={postsData} />
         <Footer />
-      </>
+      </Fragment>
     )
   }
 
@@ -61,11 +62,11 @@ export default async function BlogPage({ params }: { params: { slug?: string[] }
     const postData = { post, markdown }
 
     return (
-      <>
+      <Fragment>
         <Header titlePre="Post" />
         <PostLayout postData={postData} />
         <Footer />
-      </>
+      </Fragment>
     )
   }
 

@@ -64,7 +64,7 @@ export async function getSParams_Posts() {
   })
   titles
   const postsPaths = titles.map((post) => ({
-    params: { slug: [post.slug] },
+    slug: ["post", post.slug],
   }))
 
   const totalPages = Math.ceil(titles.length / POSTS_PER_PAGE)

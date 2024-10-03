@@ -1,8 +1,6 @@
 import Link from "next/link"
-import { cn } from "@/util/utils"
 
 import { siteMetadata } from "@/config/site"
-import { fontCaveat } from "@/styles/fonts"
 
 import { MainNav } from "./main-nav"
 
@@ -13,10 +11,7 @@ export function Header({ titlePre = "Home" }: { titlePre?: string }) {
         <div className="flex gap-6 md:gap-10 items-center">
           <Link href="/">
             <span
-              className={cn(
-                "inline-block font-bold  md:text-4xl  sm:text-2xl text-xl",
-                fontCaveat.className
-              )}
+              className={"inline-block font-bold  md:text-4xl  sm:text-2xl text-xl font-caveat"}
             >
               {siteMetadata.author}
             </span>

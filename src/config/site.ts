@@ -7,10 +7,20 @@ export const siteMetadata = {
   description: "Um Blog sobre desenvolvimento e análise",
   language: "pt-br",
   theme: "system", // system, dark or light
-  posts_per_page: 5,
   siteLogo: "/static/images/logo.png",
   socialBanner: "/static/images/twitter-card.png",
-
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.png",
+    apple: "/apple-touc.png",
+  },
+  hrefs: {
+    blog: {
+      post: "/blog/post/",
+      tags: "/blog/tags/",
+      index: "/blog/",
+    },
+  },
   mainNav: [
     {
       title: "Home",
@@ -39,6 +49,10 @@ export const siteMetadata = {
   },
 }
 export const siteConfigs = {
+  pages: {
+    posts_per_page: 5,
+    revalidate: 60 * 60 * 24 * 2,
+  },
   notion: {
     dataBasePosts: process.env.NOTION_DATABASE_POSTS_ID,
     apiKey: process.env.NOTION_API_KEY,

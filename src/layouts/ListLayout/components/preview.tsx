@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { formateDate } from "@/util/utils"
+import { formateDate } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/site"
 
@@ -39,7 +39,10 @@ const Preview = ({ post }: { post: PropsPreview }) => {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                    <Link href={`/blog/${post.slug}`} aria-label={`Read more: "${post.title}"`}>
+                    <Link
+                      href={`${siteMetadata.hrefs.blog.post}${post.slug}`}
+                      aria-label={`Read more: "${post.title}"`}
+                    >
                       {post.title}
                     </Link>
                   </h2>
@@ -47,7 +50,7 @@ const Preview = ({ post }: { post: PropsPreview }) => {
                     {post.tags.map((tag) => (
                       <Link
                         key={tag.id}
-                        href={`/tags/${tag.slug}`}
+                        href={`${siteMetadata.hrefs.blog.tags}${tag.slug}`}
                         className="mr-3 text-base font-medium  text-primary hover:text-primary/80"
                       >
                         {tag.name}
@@ -61,7 +64,7 @@ const Preview = ({ post }: { post: PropsPreview }) => {
               </div>
               <div>
                 <Link
-                  href={`/blog/${post.slug}`}
+                  href={`/blog/post/${post.slug}`}
                   className="text-base font-medium leading-6 text-primary hover:text-primary/80"
                   aria-label={`Read more: "${post.title}"`}
                 >

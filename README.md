@@ -1,26 +1,57 @@
-# next-template
+# Blog Next.js com Notion
 
-A Next.js 13 template for building apps with Radix UI and Tailwind CSS.
+Um blog moderno construído com Next.js e integrado com a API do Notion para gerenciamento de conteúdo.
 
-## Usage
+## Tecnologias Utilizadas
+
+- Next.js 13 com App Router
+- React 18
+- TypeScript
+- Tailwind CSS para estilização
+- API do Notion para gerenciamento de conteúdo
+- Radix UI para componentes de interface acessíveis
+- Lucide React para ícones
+- next-themes para suporte a modo escuro
+- Vercel para hospedagem e deploy
+
+## Características
+
+- Design responsivo e moderno
+- Modo escuro/claro
+- Sistema de autenticação robusto
+- Integração com Notion para criação e gerenciamento de posts
+- Otimização de SEO
+- Comentários em posts
+- Categorização e tags para posts
+- Pesquisa de conteúdo
+
+## Como Usar
 
 ```bash
-npx create-next-app -e https://github.com/FelipeMiiller/nextjs-template
+# Clone o repositório
+git clone https://github.com/FelipeMiiller/Blog.git
+
+# Entre no diretório
+cd Blog
+
+# Instale as dependências
+npm install
+
+# Configure as variáveis de ambiente
+cp .env.example .env.local
+
+# Inicie o servidor de desenvolvimento
+npm run dev
 ```
 
-## Features
+Acesse `http://localhost:3000` no seu navegador para ver o blog em ação.
 
-- Next.js 13 App Directory.
-- Radix UI Primitives.
-- Tailwind CSS.
-- Icons from [Radix-ui](https://www.radix-ui.com/icons).
-- Dark mode with `next-themes`
-- Tailwind CSS class sorting, merging and linting.
-- Jest.
-- React Testing Librar.
-- Prettier.
-- ESLint
+## Configuração do Notion
 
-## License
+1. Crie uma nova página no Notion para seu blog
+2. Configure a integração do Notion e obtenha a chave da API
+3. Adicione a chave da API e o ID da página à sua configuração .env.local
 
-Licensed under the [MIT license]().
+## Licença
+
+Este projeto está licenciado sob a [Licença MIT](LICENSE).

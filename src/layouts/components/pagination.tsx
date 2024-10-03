@@ -1,17 +1,13 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-"use client"
-
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 interface PaginationProps {
   totalPages?: number
   currentPage?: number
+  basePath: string
 }
 
-export function Pagination({ totalPages = 1, currentPage = 1 }: PaginationProps) {
-  const pathname = usePathname()
-  const basePath = pathname.split("/")[1]
+export function Pagination({ totalPages = 1, currentPage = 1, basePath }: PaginationProps) {
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
 

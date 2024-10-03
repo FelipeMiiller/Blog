@@ -1,11 +1,12 @@
 import "@/styles/globals.css"
 
+import { Fragment } from "react"
 import { Metadata } from "next"
 import { TailwindIndicator, ThemeProvider } from "@/components"
-import { cn } from "@/util/utils"
+import { cn } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/site"
-import { fontSans } from "@/styles/fonts"
+import { baskervville, caveat, roboto } from "@/styles/fonts"
 
 export const metadata: Metadata = {
   title: {
@@ -30,18 +31,22 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <>
-      <html lang={siteMetadata.language} suppressHydrationWarning>
+    <Fragment>
+      <html
+        lang={siteMetadata.language}
+        className={cn(roboto.variable, caveat.variable, baskervville.variable)}
+        suppressHydrationWarning
+      >
         <head />
-        <body className={cn("min-h-screen  flex bg-background  antialiased", fontSans.variable)}>
+        <body className={"min-h-screen  flex bg-background font-roboto  antialiased"}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <div className="flex h-screen flex-col  font-sans flex-1  container px-2 max-w-6xl">
+            <div className="flex h-screen flex-col   flex-1  container px-2 max-w-6xl">
               {children}
             </div>
             <TailwindIndicator />
           </ThemeProvider>
         </body>
       </html>
-    </>
+    </Fragment>
   )
 }

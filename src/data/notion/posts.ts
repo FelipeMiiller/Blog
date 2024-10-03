@@ -1,11 +1,15 @@
-import { siteMetadata } from "@/config/site"
+import { siteConfigs } from "@/config/site"
 
-import Notion from "."
+import Notion, { NotionPostData } from "."
 
-const POSTS_PER_PAGE = siteMetadata.posts_per_page as number
-export async function getSProps_PostsInOrderForPublished() {
-  const revalidate = 60 * 60 * 24
-  let posts = await new Notion().query({
+const POSTS_PER_PAGE = siteConfigs.pages.posts_per_page as number
+const REVALIDATE = siteConfigs.pages.revalidate as number
+
+export async function getPostsInOrderForPublished(): Promise<{
+  posts: NotionPostData[]
+  posts_per_page: number
+}> {
+  const posts = await new Notion().query({
     filter: {
       property: "Published",
       checkbox: {
@@ -23,19 +27,14 @@ export async function getSProps_PostsInOrderForPublished() {
       },
     ],
   })
-
   return {
-    props: {
-      posts,
-      posts_per_page: POSTS_PER_PAGE,
-    },
-    revalidate,
+    posts,
+    posts_per_page: POSTS_PER_PAGE,
   }
 }
 
 export async function getSParams_PostsInOrderForPublished() {
-  const revalidate = 60 * 60 * 24
-  let titles = await new Notion().query({
+  const titles = await new Notion().query({
     filter: {
       property: "Published",
       checkbox: {
@@ -50,13 +49,12 @@ export async function getSParams_PostsInOrderForPublished() {
     props: {
       titles,
     },
-    revalidate,
+    REVALIDATE,
   }
 }
 
 export async function getSParams_Posts() {
-  const revalidate = 60 * 60 * 24
-  let titles = await new Notion().query({
+  const titles = await new Notion().query({
     filter: {
       property: "Published",
       checkbox: {
@@ -69,4 +67,12 @@ export async function getSParams_Posts() {
   const totalPages = Math.ceil(titles.length / POSTS_PER_PAGE)
   const paths = Array.from({ length: totalPages }, (_, i) => ({ page: (i + 1).toString() }))
   return paths
+}
+
+export async function getPostWithMarkdown(id: string): Promise<string | null> {
+  const notion = new Notion()
+
+  const markdown = await notion.getPageMarkdown(id)
+
+  return markdown
 }

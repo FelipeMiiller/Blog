@@ -1,7 +1,6 @@
 import Link from "next/link"
-import { cn } from "@/util/utils"
 
-import { fontCaveat } from "@/styles/fonts"
+import { siteMetadata } from "@/config/site"
 
 import Preview, { PropsPreview } from "./components/preview"
 
@@ -9,16 +8,15 @@ interface ListLayoutProps {
   posts: PropsPreview[]
 }
 
-export default async function ListLayoutt({ posts }: ListLayoutProps) {
+export default async function ListLayout({ posts }: ListLayoutProps) {
   return (
     <>
       <div className="divide-y-2 divide-tertiary">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
           <h1
-            className={cn(
-              "text-3xl font-extrabold leading-9 tracking-tight  sm:text-4xl sm:leading-10 md:text-6xl md:leading-14",
-              fontCaveat.className
-            )}
+            className={
+              "text-3xl font-extrabold leading-9 tracking-tight  sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 font-caveat"
+            }
           >
             Latest posts
           </h1>
@@ -31,7 +29,11 @@ export default async function ListLayoutt({ posts }: ListLayoutProps) {
         </ul>
       </div>
       <div className="flex justify-end text-base font-medium leading-6">
-        <Link href="/blog" className="text-primary hover:text-primary/80 " aria-label="All posts">
+        <Link
+          href={siteMetadata.hrefs.blog.index}
+          className="text-primary hover:text-primary/80 "
+          aria-label="All posts"
+        >
           All Posts &rarr;
         </Link>
       </div>

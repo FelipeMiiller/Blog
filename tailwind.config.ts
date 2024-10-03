@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss"
 
+import { baskervville } from "@/styles/fonts"
+
 export default {
   darkMode: ["class"],
   content: [
@@ -8,6 +10,7 @@ export default {
     "./src/app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
+
   theme: {
     container: {
       center: true,
@@ -17,6 +20,11 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        roboto: "var(--font-roboto)",
+        caveat: "var(--font-caveat)",
+        baskervville: "var(--font-baskervville)",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

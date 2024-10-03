@@ -1,19 +1,17 @@
-import { getSProps_PostsInOrderForPublished } from "@/data/notion/posts"
+import { Fragment } from "react"
+import { getPostsInOrderForPublished } from "@/data/notion/posts"
 import { ListLayout } from "@/layouts"
 
 import { Footer, Header } from "./components"
 
 export default async function IndexPage() {
-  let {
-    props: { posts, posts_per_page },
-  } = await getSProps_PostsInOrderForPublished()
-  posts = posts.slice(0, posts_per_page)
+  const { posts, posts_per_page } = await getPostsInOrderForPublished()
 
   return (
-    <>
+    <Fragment>
       <Header titlePre="Home" />
-      <ListLayout posts={posts} />
+      <ListLayout posts={posts.slice(0, posts_per_page)} />
       <Footer />
-    </>
+    </Fragment>
   )
 }

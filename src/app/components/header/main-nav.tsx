@@ -1,11 +1,11 @@
 import * as React from "react"
 import Link from "next/link"
 import { SocialIcon, ThemeToggle } from "@/components"
-import { cn } from "@/util/utils"
+import { cn } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/site"
 
-import { NavItem } from "../../../types/nav"
+import { NavItem } from "../../../types"
 
 interface MainNavProps {
   items?: NavItem[]

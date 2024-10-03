@@ -4,8 +4,6 @@ import { ButtonUi } from "./button"
 import { Calendar } from "./calendar"
 import { CardUi } from "./card"
 import { Checkbox } from "./checkbox"
-import { CommandUi } from "./command"
-import { DialogUi } from "./dialog"
 import { DropdownMenuUi } from "./dropdown-menu"
 import { Input } from "./input"
 import { Label } from "./label"
@@ -23,8 +21,6 @@ export {
   DropdownMenuUi,
   TabsUi,
   AvatarUi,
-  CommandUi,
-  DialogUi,
   SelectUi,
   Input as InputUi,
   Label as LabelUi,

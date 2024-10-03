@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/util/utils"
+import { cn } from "@/utils/utils"
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"

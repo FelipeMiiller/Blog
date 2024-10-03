@@ -1,6 +1,7 @@
 import { APIResponseError, Client } from "@notionhq/client"
 import { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints"
 import GithubSlugger from "github-slugger"
+import { NotionToMarkdown } from "notion-to-md"
 
 import { siteConfigs } from "@/config/site"
 
@@ -62,7 +63,7 @@ type Page = {
   public_url: string
   properties: properties
 }
-export type NormalizeResponseQuery = {
+export type NotionPostData = {
   slug: string
   page: string
   title: string
@@ -83,18 +84,19 @@ export type NormalizeResponseQuery = {
 export type NotionQueryResponse = Array<Page>
 
 interface Notion {
-  query(
-    args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">
-  ): Promise<NormalizeResponseQuery[]>
+  query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<NotionPostData[]>
 }
 
 class Notion implements Notion {
   readonly databaseId = siteConfigs.notion.dataBasePosts as string
-  constructor(protected notion = new Client({ auth: siteConfigs.notion.apiKey })) {}
+  private n2m: NotionToMarkdown
+  constructor(protected notion = new Client({ auth: siteConfigs.notion.apiKey })) {
+    this.n2m = new NotionToMarkdown({ notionClient: notion })
+  }
 
   async query(
     args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">
-  ): Promise<NormalizeResponseQuery[]> {
+  ): Promise<NotionPostData[]> {
     try {
       const { results } = await this.notion.databases.query({
         database_id: this.databaseId,
@@ -105,11 +107,33 @@ class Notion implements Notion {
     } catch (error) {
       if (error instanceof APIResponseError) {
         const { name, code, message, status } = error
+        throw new Error(`Notion API Error: ${name} (${code}) - ${message}. Status: ${status}`)
+      } else if (error instanceof Error) {
+        throw new Error(`Unexpected error: ${error.message}`)
+      } else {
+        throw new Error("Unknown error occurred")
       }
-      throw error
     }
   }
-  private normalizeResponseQuery(rows: NotionQueryResponse): NormalizeResponseQuery[] {
+
+  async getPageMarkdown(pageId: string): Promise<string> {
+    try {
+      const mdblocks = await this.n2m.pageToMarkdown(pageId)
+      const mdString = this.n2m.toMarkdownString(mdblocks).parent
+      return mdString
+    } catch (error) {
+      if (error instanceof APIResponseError) {
+        const { name, code, message, status } = error
+        throw new Error(`Notion API Error: ${name} (${code}) - ${message}. Status: ${status}`)
+      } else if (error instanceof Error) {
+        throw new Error(`Unexpected error: ${error.message}`)
+      } else {
+        throw new Error("Unknown error occurred")
+      }
+    }
+  }
+
+  private normalizeResponseQuery(rows: NotionQueryResponse): NotionPostData[] {
     return rows.map((row) => ({
       slug: new GithubSlugger().slug(row.properties?.Page.title[0].text.content),
       page: row.id,

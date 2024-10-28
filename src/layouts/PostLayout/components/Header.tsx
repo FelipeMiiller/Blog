@@ -48,7 +48,7 @@ export default function Header({
           <Link
             key={tag.id}
             href={`${siteMetadata.hrefs.blog.tags}${tag.slug}`}
-            className="text-sm font-medium bg-secondary text-secondary-foreground px-2 py-1 rounded-md hover:bg-secondary/80"
+            className="text-sm font-medium bg-secondary text-primary px-2 py-1 rounded-md hover:text-primary/80"
           >
             {tag.name}
           </Link>

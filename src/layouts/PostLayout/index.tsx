@@ -24,7 +24,7 @@ export default function PostLayout({
             <TableOfContents headings={headings} />
           </div>
         </div>
-        <article className="flex-grow max-w-3xl prose dark:prose-invert">
+        <article className="flex-grow prose dark:prose-invert max-w-3xl ">
           <MarkdownContent content={markdown} />
         </article>
       </div>

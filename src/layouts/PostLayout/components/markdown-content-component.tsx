@@ -1,6 +1,7 @@
 import React from "react"
 import ReactMarkdown from "react-markdown"
 import rehypeKatex from "rehype-katex"
+import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 
 import "katex/dist/katex.min.css"
@@ -33,10 +34,9 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
   }
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkMath]}
+      remarkPlugins={[remarkMath, remarkGfm]}
       rehypePlugins={[rehypeKatex]}
-      className="font-baskervville  
-      "
+      className="font-baskervville"
       components={{
         h1: HeadingComponent(1),
         h2: HeadingComponent(2),

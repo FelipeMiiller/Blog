@@ -1,8 +1,10 @@
 import Link from "next/link"
+import { notFound } from "next/navigation"
 
 import { siteMetadata } from "@/config/site"
 
-import Preview, { PropsPreview } from "./components/preview"
+import Header from "./components/Header"
+import Preview, { PropsPreview } from "./components/Preview"
 
 interface ListLayoutProps {
   posts: PropsPreview[]
@@ -12,20 +14,13 @@ export default async function ListLayout({ posts }: ListLayoutProps) {
   return (
     <>
       <div className="divide-y-2 divide-tertiary">
-        <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-          <h1
-            className={
-              "text-3xl font-extrabold leading-9 tracking-tight  sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 font-caveat"
-            }
-          >
-            Latest posts
-          </h1>
-        </div>
+        <Header />
         <ul className="divide-y-2 divide-tertiary">
-          {!posts.length && "No posts found."}
-          {posts.map((post) => {
-            return <Preview post={post} key={post.slug} />
-          })}
+          {posts.length > 0
+            ? posts.map((post) => {
+                return <Preview post={post} key={post.slug} />
+              })
+            : notFound()}
         </ul>
       </div>
       <div className="flex justify-end text-base font-medium leading-6">

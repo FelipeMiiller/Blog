@@ -1,9 +1,12 @@
 {
-  "name": "next-template",
-  "version": "0.1.0",
+  "name": "blog",
+  "version": "0.1.2",
   "scripts": {
+    "clean": "next build --clean",
     "dev": "next dev",
+    "predev": "npm run format",
     "build": "next build",
+    "prebuild": "npm run clean",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -11,24 +14,9 @@
     "typecheck": "tsc --noEmit",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
-    "format": "yarn format:write && yarn lint:fix",
-    "predev": "yarn format",
+    "format": "npm run format:write && npm run lint:fix",
     "test": "jest --watch",
-    "test:changed": "jest --findRelatedTests",
-    "prepare": "husky install"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "yarn lint:fix",
-      "yarn test:changed",
-      "format:write"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn test"
-    }
+    "test:changed": "jest --findRelatedTests"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.15",
@@ -46,10 +34,6 @@
     "@tanstack/react-table": "^8.10.1",
     "autoprefixer": "10.4.15",
     "class-variance-authority": "^0.7.0",
-    "react-markdown": "^9.0.1",
-    "rehype-katex": "^7.0.1",
-    "remark-math": "^6.0.0",
-    "notion-to-md": "^3.1.1",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
@@ -57,10 +41,15 @@
     "github-slugger": "^2.0.0",
     "next": "13.4.19",
     "next-themes": "^0.2.1",
+    "notion-to-md": "^3.1.1",
     "postcss": "8.4.29",
     "react": "18.2.0",
     "react-day-picker": "^8.8.2",
     "react-dom": "18.2.0",
+    "react-markdown": "^9.0.1",
+    "rehype-katex": "^7.0.1",
+    "remark-gfm": "^4.0.0",
+    "remark-math": "^6.0.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
@@ -84,7 +73,6 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "husky": "^8.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",

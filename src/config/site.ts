@@ -51,7 +51,7 @@ export const siteMetadata = {
 export const siteConfigs = {
   pages: {
     posts_per_page: 5,
-    revalidate: 60 * 60 * 24 * 2,
+    revalidate: 60 * 60 * 24 * 1,
   },
   notion: {
     dataBasePosts: process.env.NOTION_DATABASE_POSTS_ID,

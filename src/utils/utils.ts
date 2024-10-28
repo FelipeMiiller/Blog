@@ -60,7 +60,11 @@ export const extractHeadings = (
     headings.push({
       level: match[1].length,
       text: text,
-      id: text.toLowerCase().replace(/[^\w]+/g, "-"),
+      id: text
+        .toLowerCase()
+        .replace(/[^\w]+/g, "-")
+        .replace(/^\-+|\-+$/g, "")
+        .trim(),
     })
   }
 

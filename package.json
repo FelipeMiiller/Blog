@@ -2,7 +2,7 @@
   "name": "blog",
   "version": "0.1.2",
   "scripts": {
-    "clean": "next build --clean",
+    "clean": "rimraf .next",
     "dev": "next dev",
     "predev": "npm run format",
     "build": "next build",

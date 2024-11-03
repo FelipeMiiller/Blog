@@ -1,5 +1,5 @@
 import React from "react"
-import { NotionPostData } from "@/data/notion"
+import { NotionPostData } from "@/service/notion"
 import { cn, extractHeadings, readingTime as ReadingTime } from "@/utils/utils"
 
 import "katex/dist/katex.min.css"

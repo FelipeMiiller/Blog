@@ -2,7 +2,7 @@ import React from "react"
 import Link from "next/link"
 import { TagCount } from "@/types"
 
-import { siteMetadata } from "@/config/site"
+import { siteMetadata } from "@/config/siteMetadata"
 
 interface TagListProps {
   tags: TagCount[]

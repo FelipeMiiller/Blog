@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { siteMetadata } from "@/config/site"
+import { siteMetadata } from "@/config/siteMetadata"
 
 import { MainNav } from "./main-nav"
 

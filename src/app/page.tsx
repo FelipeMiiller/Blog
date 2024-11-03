@@ -1,5 +1,5 @@
 import { Fragment } from "react"
-import { getPostsInOrderForPublished } from "@/data/notion/posts"
+import { getPostsInOrderForPublished } from "@/service/notion/posts"
 import { ListLayout } from "@/layouts"
 
 import { Footer, Header } from "./components"

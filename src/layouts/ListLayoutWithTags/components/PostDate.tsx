@@ -1,7 +1,7 @@
 import React from "react"
 import { formateDate } from "@/utils/utils"
 
-import { siteMetadata } from "@/config/site"
+import { siteMetadata } from "@/config/siteMetadata"
 
 interface PostDateProps {
   created: string

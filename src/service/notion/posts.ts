@@ -1,9 +1,9 @@
-import { siteConfigs } from "@/config/site"
+import { envConfigs } from "@/config"
 
 import Notion, { NotionPostData } from "."
 
-const POSTS_PER_PAGE = siteConfigs.pages.posts_per_page as number
-const REVALIDATE = siteConfigs.pages.revalidate as number
+const POSTS_PER_PAGE = envConfigs.pages.posts_per_page as number
+const REVALIDATE = envConfigs.pages.revalidate as number
 
 export async function getPostsInOrderForPublished(): Promise<{
   posts: NotionPostData[]

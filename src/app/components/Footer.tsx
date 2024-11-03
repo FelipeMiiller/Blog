@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { SocialIcon } from "@/components"
 
-import { siteMetadata } from "@/config/site"
+import { siteMetadata } from "@/config/siteMetadata"
 
 export default function Footer() {
   return (

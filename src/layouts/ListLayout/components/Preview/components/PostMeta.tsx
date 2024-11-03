@@ -1,6 +1,6 @@
 import { formateDate } from "@/utils/utils"
 
-import { siteMetadata } from "@/config/site"
+import { siteMetadata } from "@/config/siteMetadata"
 
 interface Props {
   created: string

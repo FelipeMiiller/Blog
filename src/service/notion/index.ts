@@ -1,9 +1,8 @@
+import { envConfigs } from "@/config"
 import { APIResponseError, Client } from "@notionhq/client"
 import { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints"
 import GithubSlugger from "github-slugger"
 import { NotionToMarkdown } from "notion-to-md"
-
-import { siteConfigs } from "@/config/site"
 
 type WithAuth<P> = P & {
   auth?: string
@@ -88,9 +87,9 @@ interface Notion {
 }
 
 class Notion implements Notion {
-  readonly databaseId = siteConfigs.notion.dataBasePosts as string
+  readonly databaseId = envConfigs.notion.dataBasePosts as string
   private n2m: NotionToMarkdown
-  constructor(protected notion = new Client({ auth: siteConfigs.notion.apiKey })) {
+  constructor(protected notion = new Client({ auth: envConfigs.notion.apiKey })) {
     this.n2m = new NotionToMarkdown({ notionClient: notion })
   }
 

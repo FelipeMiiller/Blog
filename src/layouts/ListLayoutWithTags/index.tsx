@@ -1,32 +1,12 @@
 import React from "react"
 import { Metadata } from "next"
-import { NotionPostData } from "@/data/notion"
+import { NotionPostData } from "@/service/notion"
 import { Post } from "@/types"
 import { isStringOnlyNumbers } from "@/utils/utils"
 
-import { siteMetadata } from "@/config/site"
-
-import { Pagination } from "../components/pagination"
+import { Pagination } from "./components/pagination"
 import PostList from "./components/postList"
 import TagList from "./components/tagList"
-
-export const metadata: Metadata = {
-  metadataBase: new URL(siteMetadata.links.siteUrl),
-  title: {
-    default: siteMetadata.title,
-    template: `%s - ${siteMetadata.author}`,
-  },
-  description: siteMetadata.description,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.png",
-    apple: "/apple-touc.png",
-  },
-}
 
 const ListLayoutWithTags = async ({
   slug,

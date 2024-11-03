@@ -3,8 +3,6 @@ import "@testing-library/jest-dom"
 import React from "react"
 import { render, screen } from "@testing-library/react"
 
-import { homeConfig } from "@/config/site"
-
 import { MainNav } from "../header/main-nav"
 
 describe("MainNav", () => {

@@ -1,6 +1,7 @@
+import { TagsLink } from "@/components"
+
 import PostDescription from "./components/PostDescription"
 import PostMeta from "./components/PostMeta"
-import PostTags from "./components/PostTags"
 import PostTitle from "./components/PostTitle"
 import ReadMore from "./components/ReadMore"
 
@@ -22,7 +23,7 @@ function Preview({ post }: { post: PropsPreview }) {
         <div className="space-y-5 xl:col-span-4">
           <div className="space-y-6">
             <PostTitle title={post.title} slug={post.slug} />
-            <PostTags tags={post.tags} />
+            <TagsLink tags={post.tags} />
             <PostDescription description={post.description} />
           </div>
           <ReadMore slug={post.slug} title={post.title} />

@@ -5,25 +5,10 @@ import { Metadata } from "next"
 import { TailwindIndicator, ThemeProvider } from "@/components"
 import { cn } from "@/utils/utils"
 
-import { siteMetadata } from "@/config/site"
-import { baskervville, caveat, roboto } from "@/styles/fonts"
+import { siteMetadata } from "@/config/siteMetadata"
+import { caveat, poppins, roboto } from "@/styles/fonts"
 
-export const metadata: Metadata = {
-  title: {
-    default: siteMetadata.author,
-    template: `%s - ${siteMetadata.author}`,
-  },
-  description: siteMetadata.description,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.png",
-    apple: "/apple-touc.png",
-  },
-}
+export const metadata: Metadata = siteMetadata.metadata
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -34,12 +19,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <Fragment>
       <html
         lang={siteMetadata.language}
-        className={cn(roboto.variable, caveat.variable, baskervville.variable)}
+        className={cn(roboto.variable, caveat.variable, poppins.variable)}
         suppressHydrationWarning
       >
         <head />
         <body className={"min-h-screen  flex bg-background font-roboto  antialiased"}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme={siteMetadata.theme} enableSystem>
             <div className="flex h-screen flex-col   flex-1  container px-2 max-w-6xl">
               {children}
             </div>

@@ -3,7 +3,7 @@ import Link from "next/link"
 import { SocialIcon, ThemeToggle } from "@/components"
 import { cn } from "@/utils/utils"
 
-import { siteMetadata } from "@/config/site"
+import { siteMetadata } from "@/config/siteMetadata"
 
 import { NavItem } from "../../../types"
 

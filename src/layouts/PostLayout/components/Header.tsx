@@ -2,11 +2,11 @@
 
 import React from "react"
 import Link from "next/link"
-import { Icons } from "@/components"
-import { NotionPostData } from "@/data/notion"
+import { Icons, TagsLink } from "@/components"
+import { NotionPostData } from "@/service/notion"
 import { formateDate } from "@/utils/utils"
 
-import { siteMetadata } from "@/config/site"
+import { siteMetadata } from "@/config/siteMetadata"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
@@ -43,17 +43,9 @@ export default function Header({
           <span>{readingTime.wordCount} palavras</span>
         </div>
       </div>
-      <div className="flex flex-wrap gap-2 mb-4">
-        {post.tags?.map((tag) => (
-          <Link
-            key={tag.id}
-            href={`${siteMetadata.hrefs.blog.tags}${tag.slug}`}
-            className="text-sm font-medium bg-secondary text-primary px-2 py-1 rounded-md hover:text-primary/80"
-          >
-            {tag.name}
-          </Link>
-        ))}
-      </div>
+
+      <TagsLink tags={post.tags} />
+
       <Separator className="my-8" />
     </header>
   )

@@ -18,10 +18,9 @@ Um blog moderno construído com Next.js e integrado com a API do Notion para ger
 
 - Design responsivo e moderno
 - Modo escuro/claro
-- Sistema de autenticação robusto
+
 - Integração com Notion para criação e gerenciamento de posts
 - Otimização de SEO
-- Comentários em posts
 - Categorização e tags para posts
 - Pesquisa de conteúdo
 

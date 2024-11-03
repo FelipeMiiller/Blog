@@ -1,11 +1,11 @@
 import React from "react"
 import Link from "next/link"
+import { TagsLink } from "@/components"
 import { Post } from "@/types"
 
-import { siteMetadata } from "@/config/site"
+import { siteMetadata } from "@/config/siteMetadata"
 
 import PostDate from "./PostDate"
-import PostTags from "./PostTags"
 
 interface PostListProps {
   posts: Post[]
@@ -30,7 +30,7 @@ const PostList: React.FC<PostListProps> = ({ posts }) => (
                       {title}
                     </Link>
                   </h2>
-                  <PostTags tags={tags} />
+                  <TagsLink tags={tags} />
                 </div>
                 <div className="prose max-w-none text-muted-foreground marker:text-accent-foreground">
                   <p>{description}</p>

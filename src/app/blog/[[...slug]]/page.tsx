@@ -1,38 +1,28 @@
 import { Fragment } from "react"
 import { Metadata } from "next"
+import { notFound } from "next/navigation"
+import { ListLayoutWithTags } from "@/layouts"
+import PostLayout from "@/layouts/PostLayout"
 import {
   getPostsInOrderForPublished,
   getPostWithMarkdown,
   getSParams_Posts,
-} from "@/data/notion/posts"
-import { ListLayoutWithTags } from "@/layouts"
-import PostLayout from "@/layouts/PostLayout"
+} from "@/service/notion/posts"
 
-import { siteMetadata } from "@/config/site"
-import NotFound from "@/app/not-found"
+import { siteMetadata } from "@/config/siteMetadata"
 
 import { Footer, Header } from "../../components"
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteMetadata.links.siteUrl),
-  title: {
-    default: siteMetadata.title,
-    template: `%s - ${siteMetadata.author}`,
-  },
-  authors: {
-    name: siteMetadata.author,
-    url: siteMetadata.links.siteUrl,
-  },
-  description: siteMetadata.description,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-  icons: {
-    icon: "/static/favfavicon.ico",
-    shortcut: "/favicon.png",
-    apple: "/apple-touc.png",
-  },
+type GenerateMetadataProps = {
+  params: { slug?: string[] }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+export async function generateMetadata({ params }: GenerateMetadataProps): Promise<Metadata> {
+  const slug = params.slug
+
+  return {
+    ...siteMetadata.metadata,
+  }
 }
 
 export const generateStaticParams = getSParams_Posts
@@ -40,7 +30,7 @@ export default async function BlogPage({ params }: { params: { slug?: string[] }
   const slug = params.slug
   const postsData = await getPostsInOrderForPublished()
   if (postsData.posts.length > 0 && postsData.posts_per_page > 0) {
-    NotFound()
+    notFound()
   }
 
   if (!slug || slug[0] !== "post") {
@@ -58,7 +48,7 @@ export default async function BlogPage({ params }: { params: { slug?: string[] }
 
     const markdown = await getPostWithMarkdown(post.page)
 
-    if (markdown === null) return NotFound()
+    if (markdown === null) return notFound()
     const postData = { post, markdown }
 
     return (
@@ -70,5 +60,5 @@ export default async function BlogPage({ params }: { params: { slug?: string[] }
     )
   }
 
-  return NotFound()
+  return notFound()
 }

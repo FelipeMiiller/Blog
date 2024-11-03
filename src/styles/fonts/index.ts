@@ -1,3 +1,4 @@
+import { Poppins as FontPoppins } from "next/font/google"
 import localFont from "next/font/local"
 
 export const caveat = localFont({
@@ -15,9 +16,8 @@ export const roboto = localFont({
   display: "swap",
 })
 
-export const baskervville = localFont({
-  src: "./baskervville-v16-latin-regular.woff2",
-  variable: "--font-baskervville",
-  display: "swap",
-  weight: "700",
+export const poppins = FontPoppins({
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 })

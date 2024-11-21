@@ -1,8 +1,8 @@
+import React from "react"
 import Link from "next/link"
+import { mainNavConfig } from "@/config"
 import { Tag } from "@/types"
 import { cn } from "@/utils/utils"
-
-import { siteMetadata } from "@/config/siteMetadata"
 
 interface TagsProps {
   tags: Tag[]
@@ -15,8 +15,8 @@ export const TagsLink: React.FC<TagsProps> = ({ tags, className }) => {
       {tags?.map((tag) => (
         <Link
           key={tag.id}
-          href={`${siteMetadata.hrefs.blog.tags}${tag.slug}`}
-          className="text-sm font-medium  text-primary px-2 py-1  hover:text-primary/50"
+          href={`${mainNavConfig.hrefs.blog.tags}${tag.slug}`}
+          className="text-sm font-medium  text-primary px-1 hover:text-primary/50"
         >
           {tag.name}
         </Link>

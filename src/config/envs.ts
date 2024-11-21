@@ -1,4 +1,7 @@
 export const envConfigs = {
+  site: {
+    baseUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  },
   pages: {
     posts_per_page: 5,
     revalidate: 60 * 60 * 24 * 1,

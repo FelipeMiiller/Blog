@@ -1,4 +1,5 @@
 import { envConfigs } from "@/config"
+import { NotionPost } from "@/types"
 import { APIResponseError, Client } from "@notionhq/client"
 import { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints"
 import GithubSlugger from "github-slugger"
@@ -62,40 +63,24 @@ type Page = {
   public_url: string
   properties: properties
 }
-export type NotionPostData = {
-  slug: string
-  page: string
-  title: string
-  created: string
-  updated?: string
-  description: string
-  authors: {
-    object: string
-    id: string
-    name: string
-    avatar_url: string
-    type: string
-    person: { email: string }
-  }[]
-  tags: { id: string; name: string; color: string; slug: string }[]
-}
 
 export type NotionQueryResponse = Array<Page>
 
-interface Notion {
-  query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<NotionPostData[]>
+interface NotionInterface {
+  // eslint-disable-next-line no-unused-vars
+  query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<NotionPost[]>
+  // eslint-disable-next-line no-unused-vars
+  getPageMarkdown(pageId: string): Promise<string>
 }
 
-class Notion implements Notion {
+class Notion implements NotionInterface {
   readonly databaseId = envConfigs.notion.dataBasePosts as string
   private n2m: NotionToMarkdown
   constructor(protected notion = new Client({ auth: envConfigs.notion.apiKey })) {
     this.n2m = new NotionToMarkdown({ notionClient: notion })
   }
 
-  async query(
-    args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">
-  ): Promise<NotionPostData[]> {
+  async query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<NotionPost[]> {
     try {
       const { results } = await this.notion.databases.query({
         database_id: this.databaseId,
@@ -132,7 +117,7 @@ class Notion implements Notion {
     }
   }
 
-  private normalizeResponseQuery(rows: NotionQueryResponse): NotionPostData[] {
+  private normalizeResponseQuery(rows: NotionQueryResponse): NotionPost[] {
     return rows.map((row) => ({
       slug: new GithubSlugger().slug(row.properties?.Page.title[0].text.content),
       page: row.id,
@@ -141,7 +126,7 @@ class Notion implements Notion {
       updated: row.properties?.Updated.last_edited_time,
       created: row.properties?.Created.created_time,
       description: row.properties?.Description.rich_text[0].text.content,
-      tags: (row.properties?.Categories.multi_select).map((item) => ({
+      tags: row.properties?.Categories?.multi_select.map((item) => ({
         id: item.id,
         name: item.name,
         color: item.color,
@@ -151,4 +136,4 @@ class Notion implements Notion {
   }
 }
 
-export default Notion
+export default new Notion()

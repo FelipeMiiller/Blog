@@ -1,60 +1,45 @@
 import { Fragment } from "react"
-import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { ListLayoutWithTags } from "@/layouts"
-import PostLayout from "@/layouts/PostLayout"
-import {
-  getPostsInOrderForPublished,
-  getPostWithMarkdown,
-  getSParams_Posts,
-} from "@/service/notion/posts"
+import { filterPosts, getTags, pagePosts } from "@/functions/filtersPost"
+import { getMetada, getPostsInOrderForPublished } from "@/service/notion/posts"
+import { Post } from "@/types"
 
-import { siteMetadata } from "@/config/siteMetadata"
+import { Pagination } from "@/components/pagination"
 
 import { Footer, Header } from "../../components"
+import { PostList, TagList, Title } from "./components"
 
-type GenerateMetadataProps = {
-  params: { slug?: string[] }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-export async function generateMetadata({ params }: GenerateMetadataProps): Promise<Metadata> {
-  const slug = params.slug
+export const generateMetadata = getMetada
 
-  return {
-    ...siteMetadata.metadata,
-  }
-}
-
-export const generateStaticParams = getSParams_Posts
-export default async function BlogPage({ params }: { params: { slug?: string[] } }) {
-  const slug = params.slug
-  const postsData = await getPostsInOrderForPublished()
-  if (postsData.posts.length > 0 && postsData.posts_per_page > 0) {
-    notFound()
-  }
-
-  if (!slug || slug[0] !== "post") {
-    return (
-      <Fragment>
-        <Header titlePre="Blog" />
-        <ListLayoutWithTags slug={params.slug} postsData={postsData} />
-        <Footer />
-      </Fragment>
-    )
-  }
-
-  if (slug && slug[0] === "post" && slug[1] !== undefined) {
-    const post = postsData.posts.filter((post) => post.slug === decodeURIComponent(slug[1]))[0]
-
-    const markdown = await getPostWithMarkdown(post.page)
-
-    if (markdown === null) return notFound()
-    const postData = { post, markdown }
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { slug: string[] | undefined }
+  searchParams?: { page?: string }
+}) {
+  const { slug } = params
+  const data = await getPostsInOrderForPublished()
+  if (!slug || slug[0] === "tags") {
+    const postsFiltred = filterPosts(data, slug)
+    const tags = getTags(postsFiltred)
+    const { totalPages, posts } = pagePosts(postsFiltred, searchParams)
 
     return (
       <Fragment>
-        <Header titlePre="Post" />
-        <PostLayout postData={postData} />
+        <Header />
+        <div>
+          <div className="pb-6 pt-6">
+            <Title />
+          </div>
+          <div className="flex sm:space-x-24">
+            <TagList tags={tags} />
+            <div>
+              <PostList posts={posts as Post[]} />
+              {totalPages > 1 ? <Pagination totalPages={totalPages} /> : <></>}
+            </div>
+          </div>
+        </div>
         <Footer />
       </Fragment>
     )

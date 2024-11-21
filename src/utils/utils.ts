@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-escape */
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -5,9 +7,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-type TformateDate = (date: string | Date, locale?: string) => string
+// eslint-disable-next-line no-unused-vars
+type FormateDate = (date: string | Date, locale?: string) => string
 
-export const formateDate: TformateDate = (date, locale = "pt-BR") => {
+export const formateDate: FormateDate = (date, locale = "pt-BR") => {
   const handlerDate = new Date(date)
 
   return handlerDate.toLocaleString(locale, {
@@ -17,10 +20,6 @@ export const formateDate: TformateDate = (date, locale = "pt-BR") => {
   })
 }
 
-export function isStringOnlyNumbers(str: string | undefined): boolean {
-  if (str === undefined) return false
-  return /^\d+$/.test(str)
-}
 export function readingTime(post: string): {
   wordCount: number
   readingTime: number
@@ -68,4 +67,28 @@ export const extractHeadings = (
   }
 
   return headings
+}
+
+export const buildPathAndPage = ({
+  slug,
+  basePath,
+}: {
+  slug: string[] | undefined
+  basePath: string
+}): { href: string; currentPage: number; paths: string[] | undefined } => {
+  if (!slug) {
+    return { href: basePath, currentPage: 1, paths: undefined }
+  }
+
+  const pageIndex = slug.indexOf("page")
+
+  if (pageIndex === -1) {
+    return { href: basePath + slug.join("/"), currentPage: 1, paths: slug }
+  }
+
+  return {
+    href: basePath + slug.slice(0, pageIndex).join("/"),
+    currentPage: Number(slug[pageIndex + 1]),
+    paths: slug.slice(0, pageIndex),
+  }
 }

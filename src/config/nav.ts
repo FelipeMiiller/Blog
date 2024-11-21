@@ -1,4 +1,4 @@
-import { MainNavType } from "@/models"
+import { MainNavType } from "@/types"
 
 interface MainNavConfigType extends MainNavType {
   hrefs: {

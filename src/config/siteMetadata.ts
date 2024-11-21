@@ -1,23 +1,20 @@
-import { siteMetadataType } from "@/models"
+import { siteMetadataType } from "@/types"
+
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
 
 export const siteMetadata: siteMetadataType = {
   language: "pt-br",
   theme: "system",
-
   links: {
-    siteUrl: "https://felipemiiller.com",
-    siteRepo: "https://github.com/FelipeMiiller/Blog",
-    email: "felipemiillerr@gmail.com",
+    siteRepo: "https://github.com/FelipeMiiller/blog",
+  },
+  social: {
+    mail: "mailto:felipemiillerr@gmail.com",
     github: "https://github.com/FelipeMiiller",
-    x: "https://twitter.com/x",
-    facebook: "https://facebook.com",
-    youtube: "https://youtube.com",
     linkedin: "https://www.linkedin.com/in/felipe-miiller-45b1a891/",
-    threads: "https://www.threads.net",
-    instagram: "https://www.instagram.com",
   },
   metadata: {
-    metadataBase: new URL("https://github.com/FelipeMiiller/nextjs-template"),
+    metadataBase: new URL(baseUrl),
     title: {
       default: "Blog - Felipe Miiller",
       template: "%s | Blog - Felipe Miiller",
@@ -25,38 +22,14 @@ export const siteMetadata: siteMetadataType = {
     description: "Um Blog sobre desenvolvimento e análise",
     creator: "Felipe Miiller",
     applicationName: "Blog - Felipe Miiller ",
-    keywords: [
-      "blog",
-      "developer",
-      "nextjs",
-      "notion",
-      "typescript",
-      "node",
-      "nestjs",
-      "tailwind",
-
-      "javascript",
-      "api",
-      "react",
-      "css",
-      "docker",
-      "github",
-      "devto",
-      "dev",
-      "felipemiiller",
-      "felipe",
-      "miiller",
-      "python",
-    ],
+    keywords: ["blog", "developer", "notion", "analysis", "analitics", "development", "dev"],
     icons: {
       icon: "/favicon.ico",
-      shortcut: "/favicon-16x16.png",
-      apple: "/apple-touch-icon.png",
     },
     openGraph: {
       type: "website",
       locale: "pt_BR",
-      url: "https://felipemiiller.com",
+      url: baseUrl,
       title: "Blog - Felipe Miiller",
       description: "Um Blog sobre desenvolvimento e análise",
       siteName: " Felipe Miiller -Blog",
@@ -66,13 +39,12 @@ export const siteMetadata: siteMetadataType = {
       title: "Felipe Miiller - Blog",
       description: "",
     },
-    authors: [
-      {
-        name: "Felipe Miiller",
-        url: "https://github.com/FelipeMiiller",
-      },
-    ],
-
+    authors: {
+      name: "Felipe Miiller",
+      url: "https://github.com/FelipeMiiller",
+    },
+  },
+  viewport: {
     themeColor: [
       { media: "(prefers-color-scheme: light)", color: "white" },
       { media: "(prefers-color-scheme: dark)", color: "black" },

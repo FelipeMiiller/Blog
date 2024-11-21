@@ -1,23 +1,24 @@
-import { Poppins as FontPoppins } from "next/font/google"
-import localFont from "next/font/local"
+import { Caveat, Poppins, Roboto } from "next/font/google"
 
-export const caveat = localFont({
-  src: "./caveat-v18-latin-regular.woff2",
-  weight: "700",
+export const caveat = Caveat({
+  weight: ["400", "500", "700", "600"],
+  subsets: ["latin"],
   style: "normal",
   variable: "--font-caveat",
   display: "swap",
 })
 
-export const roboto = localFont({
-  src: "./roboto-mono-v23-latin-regular.woff2",
+export const roboto = Roboto({
   variable: "--font-roboto",
-  weight: "700",
+  subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "700", "900"],
 })
 
-export const poppins = FontPoppins({
+export const poppins = Poppins({
   subsets: ["latin"],
+  display: "swap",
   variable: "--font-poppins",
+  adjustFontFallback: false,
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 })

@@ -17,7 +17,10 @@ interface MainNavProps {
 export function MainNav({ items }: MainNavProps) {
   const pathname = usePathname() || "/"
 
-  const title = pathname !== "/" ? pathname.split("/")[1][0].toUpperCase() + pathname.split("/")[1].slice(1) : "Home"
+  const title =
+    pathname !== "/"
+      ? pathname.split("/")[1][0].toUpperCase() + pathname.split("/")[1].slice(1)
+      : "Home"
 
   return (
     <nav className="flex items-center space-x-1">

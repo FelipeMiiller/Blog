@@ -5,7 +5,13 @@ import { getDataPosts } from "@/service/notion/posts"
 import { NotionPost } from "@/types"
 
 import { Button } from "@/components/ui/button"
-import { CommandDialog, CommandEmpty, CommandInput, CommandList, CommandSeparator } from "@/components/ui/command"
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandInput,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command"
 import { Icons } from "@/components/icons/icons"
 
 import { Group } from "./group"

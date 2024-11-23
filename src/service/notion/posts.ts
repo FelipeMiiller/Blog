@@ -1,8 +1,7 @@
 import { Metadata } from "next"
 import { envConfigs, siteMetadata } from "@/config"
 import { getTags } from "@/functions/filtersPost"
-import { GenerateMetadataProps, NotionPost, ResponseData } from "@/types"
-import { toast } from "sonner"
+import { GenerateMetadataProps, NotionPost } from "@/types"
 
 import Notion from "./index"
 
@@ -133,36 +132,4 @@ export async function getPostWithMarkdown(id: string): Promise<string | null> {
   const markdown = await Notion.getPageMarkdown(id)
 
   return markdown
-}
-
-export async function getDataPosts(): Promise<NotionPost[]> {
-  const url = `${envConfigs.site.baseUrl}/api/summaries`
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      next: {
-        revalidate: envConfigs.pages.revalidate,
-      },
-    })
-    if (!response.ok) {
-      throw new Error(`Error fetching data: ${response.statusText}`)
-    }
-
-    const { data, message }: ResponseData<NotionPost[]> = await response.json()
-
-    if (!data || data.length === 0) {
-      throw new Error(message)
-    }
-    return data
-  } catch (error) {
-    if (error instanceof Error) {
-      toast.error(error.message)
-    }
-    toast.error("Error fetching data")
-    return []
-  }
 }

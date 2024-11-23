@@ -10,4 +10,8 @@ export const envConfigs = {
     dataBasePosts: process.env.NOTION_DATABASE_POSTS_ID,
     apiKey: process.env.NOTION_API_KEY,
   },
+  github: {
+    accessToken: process.env.GITHUB_ACCESS_TOKEN,
+    owner: process.env.GITHUB_OWNER,
+  },
 }

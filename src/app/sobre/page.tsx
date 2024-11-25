@@ -3,15 +3,14 @@ import { getReadmeContent } from "@/service/github"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { MarkdownContent } from "@/components/markdown-component"
 
-import { MarkdownContent } from "../blog/post/[slug]/components"
 import { Footer, Header } from "../components"
 
 export default function BlogReadme() {
   return (
     <Fragment>
       <Header />
-
       <Card className="mt-14">
         <CardContent>
           <Suspense fallback={<ReadmeSkeleton />}>
@@ -19,7 +18,6 @@ export default function BlogReadme() {
           </Suspense>
         </CardContent>
       </Card>
-
       <Footer />
     </Fragment>
   )
@@ -28,11 +26,9 @@ export default function BlogReadme() {
 async function ReadmeContent() {
   const content = await getReadmeContent()
   return (
-    <div className="container mx-auto px-4 py-10 lg:pt-16 lg:pb-28">
-      <article className="flex-grow prose dark:prose-invert max-w-3xl ">
-        <MarkdownContent content={content} />
-      </article>
-    </div>
+    <article className="container mx-auto px-4 py-10 lg:pt-16 lg:pb-28">
+      <MarkdownContent content={content} />
+    </article>
   )
 }
 

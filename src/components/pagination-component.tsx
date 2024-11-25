@@ -24,7 +24,7 @@ const PaginationArrow: FC<PaginationArrowProps> = ({ direction, href, isDisabled
   return (
     <Button
       onClick={() => router.push(href)}
-      className={`bg-gray-100 text-gray-500 hover:bg-gray-200 ${disabledClassName}`}
+      className={`bg-gray-100 text-gray-500 hover:bg-gray-200  ${disabledClassName}`}
       aria-disabled={isDisabled}
       disabled={isDisabled}
     >

@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import { getPostsInOrderForPublished } from "@/service/notion/posts"
 import { NotionPost, ResponseData } from "@/types"
 
+export const dynamic = "force-static"
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData<NotionPost[]>>) {
   if (req.method !== "GET") {
     res.status(405).json({ message: "Method not allowed", status: 405 })

@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import { envConfigs } from "@/config"
 import { getPostsInOrderForPublished } from "@/service/notion/posts"
 import { NotionPost, ResponseData } from "@/types"
 
@@ -16,5 +17,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     res.status(404).json({ message: "Not found", status: 404 })
     return
   }
-  res.status(200).json({ data: posts, message: "Success", status: 200 })
+  return new Response(JSON.stringify({ data: posts, message: "Success", status: 200 }), {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": envConfigs.site.baseUrl,
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  })
 }

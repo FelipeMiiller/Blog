@@ -32,13 +32,3 @@ export async function getReadmeContent(): Promise<string> {
   // The content is base64 encoded, so we need to decode it
   return Buffer.from(data.content, "base64").toString("utf-8")
 }
-
-
-
-
-
-
-
-
-
-

@@ -1,7 +1,6 @@
-import React, { JSX } from "react"
-import ReactMarkdown, { ExtraProps, Options } from "react-markdown"
+import ReactMarkdown, { Options } from "react-markdown"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism"
+import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism"
 import rehypeKatex from "rehype-katex"
 import rehypeRaw from "rehype-raw"
 import rehypeSanitize from "rehype-sanitize"
@@ -11,6 +10,7 @@ import remarkMath from "remark-math"
 
 import "katex/dist/katex.min.css"
 
+import React from "react"
 import { cva, VariantProps } from "class-variance-authority"
 
 const HeadingComponent = (level: 1 | 2 | 3 | 4 | 5 | 6) => {
@@ -66,38 +66,8 @@ const markdownContentVariants = cva("font-poppins space-y-2 flex-grow ", {
   },
 })
 
-type Components = Partial<{
-  [TagName in keyof JSX.IntrinsicElements]:  // eslint-disable-next-line no-unused-vars
-    | (new (props: JSX.IntrinsicElements[TagName] & ExtraProps) => JSX.ElementClass)
-    // eslint-disable-next-line no-unused-vars
-    | ((props: JSX.IntrinsicElements[TagName] & ExtraProps) => JSX.Element | string | null | undefined)
-    // Tag name:
-    | keyof JSX.IntrinsicElements
-}>
-
 export interface MarkdownProps extends Readonly<Options>, VariantProps<typeof markdownContentVariants> {
   content: string | null | undefined
-}
-
-const components: Components = {
-  h1: HeadingComponent(1),
-  h2: HeadingComponent(2),
-  h3: HeadingComponent(3),
-  h4: HeadingComponent(4),
-  h5: HeadingComponent(5),
-  h6: HeadingComponent(6),
-  code({ node, inline, className, children, ...props }) {
-    const match = /language-(\w+)/.exec(className || "")
-    return !inline && match ? (
-      <SyntaxHighlighter style={...vscDarkPlus} language={match[1]} PreTag="div" {...props}>
-        {String(children).replace(/\n$/, "")}
-      </SyntaxHighlighter>
-    ) : (
-      <code className={className} {...props}>
-        {children}
-      </code>
-    )
-  },
 }
 
 export function MarkdownContent({ content, variant, size, className }: MarkdownProps) {
@@ -107,7 +77,24 @@ export function MarkdownContent({ content, variant, size, className }: MarkdownP
       rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeKatex]}
       className={markdownContentVariants({ variant, size, className })}
       components={{
-        ...components,
+        h1: HeadingComponent(1),
+        h2: HeadingComponent(2),
+        h3: HeadingComponent(3),
+        h4: HeadingComponent(4),
+        h5: HeadingComponent(5),
+        h6: HeadingComponent(6),
+        code: ({ inline, className, children, ...props }: any) => {
+          const match = /language-(\w+)/.exec(className || "")
+          const language = match ? match[1] : ""
+
+          return !inline && match ? (
+            <SyntaxHighlighter style={dracula} language={language} className="rounded-md" {...props}>
+              {String(children).replace(/\n$/, "")}
+            </SyntaxHighlighter>
+          ) : (
+            <code className={className}>{children}</code>
+          )
+        },
       }}
     >
       {content}

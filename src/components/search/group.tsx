@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { mainNavConfig } from "@/config"
-import { NotionPost } from "@/types"
+import { Post } from "@/types"
 import { CommandGroup } from "cmdk"
 
 import { TagsLink } from "../tagsLink"
@@ -8,7 +8,7 @@ import { CommandItem } from "../ui/command"
 
 type Props = {
   heading: string
-  list: NotionPost[]
+  list: Post[]
 }
 
 export function Group({ heading, list }: Props) {

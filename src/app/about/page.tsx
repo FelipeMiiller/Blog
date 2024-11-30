@@ -5,12 +5,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { MarkdownContent } from "@/components/markdown-component"
 
-import { Footer, Header } from "../components"
-
 export default function BlogReadme() {
   return (
     <Fragment>
-      <Header />
       <Card className="mt-14">
         <CardContent>
           <Suspense fallback={<ReadmeSkeleton />}>
@@ -18,7 +15,6 @@ export default function BlogReadme() {
           </Suspense>
         </CardContent>
       </Card>
-      <Footer />
     </Fragment>
   )
 }

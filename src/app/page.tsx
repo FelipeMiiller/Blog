@@ -4,7 +4,7 @@ import { notFound } from "next/navigation"
 import { envConfigs, mainNavConfig } from "@/config"
 import { getMetada, getPostsInOrderForPublished } from "@/service/notion/posts"
 
-import { ContentHeader, Footer, Header, Preview } from "./components"
+import { ContentHeader, Preview } from "./components"
 
 export const generateMetadata = getMetada
 
@@ -13,7 +13,6 @@ export default async function IndexPage() {
 
   return (
     <Fragment>
-      <Header />
       <div className="divide-y-2 divide-tertiary">
         <ContentHeader />
         <ul className="divide-y-2 divide-tertiary">
@@ -33,7 +32,6 @@ export default async function IndexPage() {
           All Posts &rarr;
         </Link>
       </div>
-      <Footer />
     </Fragment>
   )
 }

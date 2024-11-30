@@ -1,6 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/eslintrc",
   "root": true,
+  "parser": " parser: '@typescript-eslint/parser",
   "env": {
     "browser": true,
     "node": true,
@@ -12,7 +13,7 @@
     "eslint:recommended",
     "plugin:@next/next/recommended"
   ],
-  "plugins": ["react-hooks", "prettier", "react", "import", "jest"],
+  "plugins": ["react-hooks", "prettier", "react", "import", "jest","@typescript-eslint"],
 
   "parserOptions": {
     "ecmaFeatures": {
@@ -75,3 +76,5 @@
     }
   ]
 }
+parser: '@typescript-eslint/parser',
+plugins: ['@typescript-eslint'],

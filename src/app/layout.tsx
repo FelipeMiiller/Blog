@@ -9,6 +9,8 @@ import { siteMetadata } from "@/config/siteMetadata"
 import { Toaster } from "@/components/ui/sonner"
 import { caveat, poppins, roboto } from "@/styles/fonts"
 
+import { Footer, Header } from "./components"
+
 interface RootLayoutProps {
   children: React.ReactNode
 }
@@ -24,7 +26,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <head />
         <body className={"min-h-screen  flex bg-background font-roboto  antialiased"}>
           <ThemeProvider attribute="class" defaultTheme={siteMetadata.theme} enableSystem>
-            <div className="flex h-screen flex-col   flex-1  container px-2 max-w-6xl">{children}</div>
+            <div className="flex h-screen flex-col   flex-1  container px-2 max-w-6xl">
+              <Header />
+              {children}
+              <Footer />
+            </div>
             <TailwindIndicator />
             <Toaster />
           </ThemeProvider>

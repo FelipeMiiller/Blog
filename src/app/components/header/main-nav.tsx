@@ -1,7 +1,10 @@
+"use client"
+
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ThemeToggle } from "@/components"
+import { Post } from "@/types"
 import { cn } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/siteMetadata"
@@ -11,10 +14,11 @@ import { SocialIcon } from "@/components/social-icons"
 import { NavItem } from "../../../types"
 
 interface MainNavProps {
-  items?: NavItem[]
+  items: NavItem[]
+  posts: Post[]
 }
 
-export async function MainNav({ items }: MainNavProps) {
+export function MainNav({ items, posts }: MainNavProps) {
   const pathname = usePathname() || "/"
 
   const title = pathname !== "/" ? pathname.split("/")[1][0].toUpperCase() + pathname.split("/")[1].slice(1) : "Home"
@@ -22,31 +26,27 @@ export async function MainNav({ items }: MainNavProps) {
   return (
     <nav className="flex items-center space-x-1">
       <div className="px-2">
-        {items?.length ? (
-          <div className="flex gap-4">
-            {items?.map(
-              (item) =>
-                item.href && (
-                  <Link key={item.title} href={item.href}>
-                    <span
-                      className={cn(
-                        "flex  text-sm font-medium hover:opacity-80 ",
-                        item.disabled && "cursor-not-allowed opacity-80",
-                        title === item.title && "uppercase"
-                      )}
-                      aria-label={item.title}
-                    >
-                      {item.title}
-                    </span>
-                  </Link>
-                )
-            )}
-          </div>
-        ) : (
-          <></>
-        )}
+        <div className="flex gap-4">
+          {items.map(
+            (item) =>
+              item.href && (
+                <Link key={item.title} href={item.href}>
+                  <span
+                    className={cn(
+                      "flex  text-sm font-medium hover:opacity-80 ",
+                      item.disabled && "cursor-not-allowed opacity-80",
+                      title === item.title && "uppercase"
+                    )}
+                    aria-label={item.title}
+                  >
+                    {item.title}
+                  </span>
+                </Link>
+              )
+          )}
+        </div>
       </div>
-      <Search />
+      <Search posts={posts} />
       <SocialIcon kind="github" href={siteMetadata.social.github} size={5} />
       <ThemeToggle />
     </nav>

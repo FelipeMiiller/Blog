@@ -1,5 +1,5 @@
 import { envConfigs } from "@/config"
-import { NotionPost } from "@/types"
+import { Post } from "@/types"
 import { APIResponseError, Client } from "@notionhq/client"
 import { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints"
 import GithubSlugger from "github-slugger"
@@ -68,7 +68,7 @@ export type NotionQueryResponse = Array<Page>
 
 interface NotionInterface {
   // eslint-disable-next-line no-unused-vars
-  query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<NotionPost[]>
+  query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<Post[]>
   // eslint-disable-next-line no-unused-vars
   getPageMarkdown(pageId: string): Promise<string>
 }
@@ -80,7 +80,7 @@ class Notion implements NotionInterface {
     this.n2m = new NotionToMarkdown({ notionClient: notion })
   }
 
-  async query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<NotionPost[]> {
+  async query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<Post[]> {
     try {
       const { results } = await this.notion.databases.query({
         database_id: this.databaseId,
@@ -117,7 +117,7 @@ class Notion implements NotionInterface {
     }
   }
 
-  private normalizeResponseQuery(rows: NotionQueryResponse): NotionPost[] {
+  private normalizeResponseQuery(rows: NotionQueryResponse): Post[] {
     return rows.map((row) => ({
       slug: new GithubSlugger().slug(row.properties?.Page.title[0].text.content),
       page: row.id,
@@ -125,6 +125,7 @@ class Notion implements NotionInterface {
       title: row.properties?.Page.title[0].text.content,
       updated: row.properties?.Updated.last_edited_time,
       created: row.properties?.Created.created_time,
+      published: row.properties?.Published.checkbox || false,
       description: row.properties?.Description.rich_text[0].text.content,
       tags: row.properties?.Categories?.multi_select.map((item) => ({
         id: item.id,

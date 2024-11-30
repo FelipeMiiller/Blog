@@ -21,8 +21,8 @@ export const mainNavConfig: MainNavConfigType = {
       href: "/blog",
     },
     {
-      title: "Sobre",
-      href: "/sobre",
+      title: "About",
+      href: "/about",
     },
   ],
   hrefs: {

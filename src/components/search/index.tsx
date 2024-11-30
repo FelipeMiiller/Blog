@@ -1,8 +1,7 @@
 "use client"
 
-import { Fragment, useEffect, useState } from "react"
-import { getDataPosts } from "@/service/notion/fetch/postDescriptions"
-import { NotionPost } from "@/types"
+import { Fragment, useState } from "react"
+import { Post } from "@/types"
 import { DialogTitle } from "@radix-ui/react-dialog"
 
 import { Button } from "@/components/ui/button"
@@ -11,17 +10,9 @@ import { Icons } from "@/components/icons/icons"
 
 import { Group } from "./group"
 
-export default function DialogSearch() {
+export default function DialogSearch({ posts }: { posts: Post[] }) {
   const [open, setOpen] = useState(false)
-  const [posts, setPosts] = useState<NotionPost[]>([])
 
-  useEffect(() => {
-    startFetching()
-  }, [])
-
-  async function startFetching() {
-    setPosts(await getDataPosts())
-  }
   return (
     <Fragment>
       <Button variant="ghost" size={"icon"} onClick={() => setOpen(true)}>

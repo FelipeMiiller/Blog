@@ -1,13 +1,13 @@
 import { Metadata } from "next"
 import { envConfigs, siteMetadata } from "@/config"
 import { getTags } from "@/functions/filtersPost"
-import { GenerateMetadataProps, NotionPost } from "@/types"
+import { GenerateMetadataProps, Post } from "@/types"
 
 import Notion from "./index"
 
 const REVALIDATE = envConfigs.pages.revalidate
 
-export async function getPostsInOrderForPublished(priorityTrue = false): Promise<NotionPost[]> {
+export async function getPostsInOrderForPublished(priorityTrue = false): Promise<Post[]> {
   return Notion.query({
     filter:
       priorityTrue === false

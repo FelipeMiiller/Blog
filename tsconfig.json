@@ -28,11 +28,7 @@
       "@/public/*": ["./public/*"]
     },
     "types": ["node", "jest"],
-    "typeRoots": [
-      "../node_modules/@types",
-      "./node_modules/@types",
-      "../node_modules/@testing-library"
-    ]
+    "typeRoots": ["../node_modules/@types", "./node_modules/@types", "../node_modules/@testing-library"]
   },
   "include": ["next-env.d.ts", "./src/**/*.tsx", "./src/**/*.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]

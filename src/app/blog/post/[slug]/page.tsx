@@ -10,7 +10,6 @@ import { cn } from "@/utils/utils"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import { MarkdownContent } from "@/components/markdown-component"
-import { Footer, Header } from "@/app/components"
 
 import { TableOfContents, Title } from "./components"
 
@@ -22,12 +21,9 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <Fragment>
-      <Header />
       <Suspense fallback={<PostSkeleton />}>
         <Content slug={slug} />
       </Suspense>
-
-      <Footer />
     </Fragment>
   )
 }

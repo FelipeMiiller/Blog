@@ -27,7 +27,6 @@ export default async function Page({
 
     return (
       <Fragment>
-        <Header />
         <div>
           <div className="pb-6 pt-6">
             <Title />
@@ -40,7 +39,6 @@ export default async function Page({
             </div>
           </div>
         </div>
-        <Footer />
       </Fragment>
     )
   }

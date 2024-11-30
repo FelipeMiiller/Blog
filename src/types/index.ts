@@ -8,16 +8,8 @@ export interface Tag {
   slug: string
 }
 
-export interface Post {
-  title: string
-  created: string
-  updated: string
-  description: string
-  slug: string
-  tags: Tag[]
-}
-
-export type NotionPost = {
+export type Post = {
+  published: boolean
   slug: string
   page: string
   title: string

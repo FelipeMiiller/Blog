@@ -1,10 +1,8 @@
-"use client"
-
 import React from "react"
 import Link from "next/link"
 import { Icons, TagsLink } from "@/components"
 import { Post } from "@/types"
-import { formateDate, readingTime } from "@/utils/utils"
+import { formatDate, readingTime } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/siteMetadata"
 import { Button } from "@/components/ui/button"
@@ -24,7 +22,7 @@ export default function Title({ post, markdown }: { post: Post; markdown: string
       <div className="flex items-center text-sm text-muted-foreground space-x-4 mb-4">
         <div className="flex items-center">
           <Icons.calendar className="w-4 h-4 mr-2" />
-          <time dateTime={post.created}>{formateDate(post.created, siteMetadata.language)}</time>
+          <time dateTime={post.created}>{formatDate(post.created, siteMetadata.language)}</time>
         </div>
         <div className="flex items-center">
           <Icons.clock className="w-4 h-4 mr-2" />

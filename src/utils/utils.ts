@@ -8,10 +8,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // eslint-disable-next-line no-unused-vars
-type FormateDate = (date: string | Date, locale?: string) => string
+type FormatDate = (date: string | Date, locale?: string) => string
 
-export const formateDate: FormateDate = (date, locale = "pt-BR") => {
+export const formatDate: FormatDate = (date, locale = "pt-BR") => {
   const handlerDate = new Date(date)
+
+  // Validar se a data é válida
+  if (isNaN(handlerDate.getTime())) {
+    throw new Error("Data inválida fornecida")
+  }
 
   return handlerDate.toLocaleString(locale, {
     month: "2-digit",
@@ -40,33 +45,21 @@ export function readingTime(post: string): {
   }
 }
 
-export const extractHeadings = (
-  markdown: string
-): {
-  level: number
-  text: string
-  id: string
-}[] => {
+export const extractHeadings = (markdown: string): Array<{ level: number; text: string; id: string }> => {
   const headingRegex = /^(#{1,6})\s+(.+)$/gm
-  const headings = []
-  let match
 
-  while ((match = headingRegex.exec(markdown)) !== null) {
-    let text = match[2]
-    // Remove asteriscos do início e do final do texto
-    text = text.replace(/^\*+|\*+$/g, "").trim()
-    headings.push({
+  return Array.from(markdown.matchAll(headingRegex)).map((match) => {
+    const text = match[2].replace(/^\*+|\*+$/g, "").trim()
+    return {
       level: match[1].length,
-      text: text,
+      text,
       id: text
         .toLowerCase()
         .replace(/[^\w]+/g, "-")
         .replace(/^\-+|\-+$/g, "")
         .trim(),
-    })
-  }
-
-  return headings
+    }
+  })
 }
 
 export const buildPathAndPage = ({
@@ -86,9 +79,14 @@ export const buildPathAndPage = ({
     return { href: basePath + slug.join("/"), currentPage: 1, paths: slug }
   }
 
+  const page = Number(slug[pageIndex + 1])
+  if (isNaN(page) || page < 1) {
+    throw new Error("Número de página inválido")
+  }
+
   return {
     href: basePath + slug.slice(0, pageIndex).join("/"),
-    currentPage: Number(slug[pageIndex + 1]),
+    currentPage: page,
     paths: slug.slice(0, pageIndex),
   }
 }

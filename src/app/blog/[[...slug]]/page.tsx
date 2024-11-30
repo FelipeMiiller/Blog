@@ -6,7 +6,6 @@ import { Post } from "@/types"
 
 import { Pagination } from "@/components/pagination"
 
-import { Footer, Header } from "../../components"
 import { PostList, TagList, Title } from "./components"
 
 export const generateMetadata = getMetada

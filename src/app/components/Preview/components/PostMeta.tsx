@@ -1,5 +1,5 @@
 import React from "react"
-import { formateDate } from "@/utils/utils"
+import { formatDate } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/siteMetadata"
 
@@ -14,9 +14,9 @@ const PostMeta: React.FC<Props> = ({ created, updated }) => {
       <dt className="sr-only">Published on</dt>
       <dd className="text-base font-medium leading-6 text-muted-foreground">
         {updated ? (
-          <time dateTime={updated}>{formateDate(updated, siteMetadata.language)}</time>
+          <time dateTime={updated}>{formatDate(updated, siteMetadata.language)}</time>
         ) : (
-          <time dateTime={created}>{formateDate(created)}</time>
+          <time dateTime={created}>{formatDate(created)}</time>
         )}
       </dd>
     </dl>

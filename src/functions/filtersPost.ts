@@ -1,7 +1,7 @@
 import { envConfigs } from "@/config"
-import { NotionPost, Tag, TagCount } from "@/types"
+import { Post, Tag, TagCount } from "@/types"
 
-function getTags(posts: NotionPost[]): TagCount[] {
+function getTags(posts: Post[]): TagCount[] {
   const tags = Object.entries(
     posts.reduce(
       (acc, post) => {
@@ -22,20 +22,20 @@ function getTags(posts: NotionPost[]): TagCount[] {
   return tags
 }
 
-function filterPostsBySlug(posts: NotionPost[], slug: string[] | undefined): NotionPost[] {
+function filterPostsBySlug(posts: Post[], slug: string[] | undefined): Post[] {
   if (!slug) return posts
   const param = decodeURIComponent(slug[1])
 
   return posts.filter((post) => post.tags.some((tag: Tag) => tag.slug === param))
 }
 
-function filterPosts(posts: NotionPost[], slug: string[] | undefined): NotionPost[] {
+function filterPosts(posts: Post[], slug: string[] | undefined): Post[] {
   const filteredPosts = filterPostsBySlug(posts, slug)
 
   return filteredPosts
 }
 
-function pagePosts(posts: NotionPost[], searchParams?: { page?: string }): { posts: NotionPost[]; totalPages: number } {
+function pagePosts(posts: Post[], searchParams?: { page?: string }): { posts: Post[]; totalPages: number } {
   const postsPerPage = envConfigs.pages.posts_per_page
   const page = searchParams?.page ? Number(searchParams.page) : 1
 

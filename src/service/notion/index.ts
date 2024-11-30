@@ -118,22 +118,31 @@ class Notion implements NotionInterface {
   }
 
   private normalizeResponseQuery(rows: NotionQueryResponse): Post[] {
-    return rows.map((row) => ({
-      slug: new GithubSlugger().slug(row.properties?.Page.title[0].text.content),
-      page: row.id,
-      authors: row.properties?.Authors.people,
-      title: row.properties?.Page.title[0].text.content,
-      updated: row.properties?.Updated.last_edited_time,
-      created: row.properties?.Created.created_time,
-      published: row.properties?.Published.checkbox || false,
-      description: row.properties?.Description.rich_text[0].text.content,
-      tags: row.properties?.Categories?.multi_select.map((item) => ({
-        id: item.id,
-        name: item.name,
-        color: item.color,
-        slug: new GithubSlugger().slug(item.name),
-      })),
-    }))
+    return rows
+      .filter((row) => {
+        return (
+          row.properties?.Page?.title?.[0]?.text?.content &&
+          row.properties?.Authors?.people &&
+          row.properties?.Created?.created_time &&
+          row.properties?.Description?.rich_text?.[0]?.text?.content &&
+          row.properties?.Categories?.multi_select
+        )
+      })
+      .map((row) => ({
+        slug: new GithubSlugger().slug(row.properties.Page.title[0].text.content),
+        page: row.id,
+        authors: row.properties.Authors.people,
+        title: row.properties.Page.title[0].text.content,
+        updated: row.properties.Updated.last_edited_time,
+        created: row.properties.Created.created_time,
+        description: row.properties.Description.rich_text[0].text.content,
+        tags: row.properties.Categories.multi_select.map((item) => ({
+          id: item.id,
+          name: item.name,
+          color: item.color,
+          slug: new GithubSlugger().slug(item.name),
+        })),
+      }))
   }
 }
 

@@ -3,14 +3,14 @@
 import React from "react"
 import Link from "next/link"
 import { Icons, TagsLink } from "@/components"
-import { NotionPost } from "@/types"
+import { Post } from "@/types"
 import { formateDate, readingTime } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/siteMetadata"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
-export default function Title({ post, markdown }: { post: NotionPost; markdown: string }) {
+export default function Title({ post, markdown }: { post: Post; markdown: string }) {
   const time = readingTime(markdown)
   return (
     <header className="mb-8">

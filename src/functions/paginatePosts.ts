@@ -1,11 +1,11 @@
-import { NotionPost } from "@/types"
+import { Post } from "@/types"
 
 export function paginatePosts(
-  posts: NotionPost[],
+  posts: Post[],
   currentPage: number,
   postsPerPage: number
 ): {
-  posts: NotionPost[]
+  posts: Post[]
   pagination: {
     currentPage: number
     totalPages: number

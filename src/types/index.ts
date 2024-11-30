@@ -9,7 +9,6 @@ export interface Tag {
 }
 
 export type Post = {
-  published: boolean
   slug: string
   page: string
   title: string

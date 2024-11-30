@@ -23,10 +23,6 @@ export async function getPostsInOrderForPublished(priorityTrue = false): Promise
         property: "Created",
         direction: "descending",
       },
-      {
-        property: "Updated",
-        direction: "descending",
-      },
     ],
   })
 }

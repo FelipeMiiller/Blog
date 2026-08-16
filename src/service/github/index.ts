@@ -2,13 +2,19 @@
 
 import { envConfigs } from "@/config"
 
+const buildFallbackContent = `# Sobre este Blog
+
+Este espaço reúne anotações e materiais sobre desenvolvimento de software.
+
+O conteúdo do perfil é sincronizado a partir do GitHub quando as credenciais de integração estão disponíveis.`
+
 export async function getReadmeContent(): Promise<string> {
   const { accessToken, owner } = envConfigs.github
   const repo = owner
   const path = "README.md"
 
   if (!accessToken) {
-    throw new Error("GitHub accessToken is not set in environment variables")
+    return buildFallbackContent
   }
 
   const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
@@ -20,13 +26,13 @@ export async function getReadmeContent(): Promise<string> {
   })
 
   if (!response.ok) {
-    throw new Error("Failed to fetch README content")
+    return buildFallbackContent
   }
 
   const data = await response.json()
 
   if (!data.content) {
-    throw new Error("README content not found")
+    return buildFallbackContent
   }
 
   // The content is base64 encoded, so we need to decode it

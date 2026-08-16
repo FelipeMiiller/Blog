@@ -13,6 +13,10 @@ import "katex/dist/katex.min.css"
 import React from "react"
 import { cva, VariantProps } from "class-variance-authority"
 
+// A tipagem publicada pelo pacote ainda declara uma assinatura de componente legada.
+// O alias preserva o componente Prism em runtime e o torna compatível com React 18.3.
+const CodeHighlighter = SyntaxHighlighter as unknown as React.ComponentType<any>
+
 const HeadingComponent = (level: 1 | 2 | 3 | 4 | 5 | 6) => {
   const Component = ({ ...props }: any) => {
     const extractText = (children: React.ReactNode): string => {
@@ -88,9 +92,9 @@ export function MarkdownContent({ content, variant, size, className }: MarkdownP
           const language = match ? match[1] : ""
 
           return !inline && match ? (
-            <SyntaxHighlighter style={dracula} language={language} className="rounded-md" {...props}>
+            <CodeHighlighter style={dracula} language={language} className="rounded-md" {...props}>
               {String(children).replace(/\n$/, "")}
-            </SyntaxHighlighter>
+            </CodeHighlighter>
           ) : (
             <code className={className}>{children}</code>
           )

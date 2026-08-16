@@ -92,6 +92,10 @@ class Notion implements NotionInterface {
     this.n2m = new NotionToMarkdown({ notionClient: notion })
   }
 
+  private shouldUseContentFallback(error: unknown): boolean {
+    return error instanceof APIResponseError && (error.status === 401 || error.status === 403)
+  }
+
   private handleError(error: unknown): never {
     if (error instanceof APIResponseError) {
       const { name, code, message, status } = error
@@ -110,6 +114,9 @@ class Notion implements NotionInterface {
       })
       return this.normalizeResponseQuery(results as unknown as NotionQueryResponse)
     } catch (error) {
+      if (this.shouldUseContentFallback(error)) {
+        return []
+      }
       this.handleError(error)
     }
   }
@@ -119,6 +126,9 @@ class Notion implements NotionInterface {
       const mdblocks = await this.n2m.pageToMarkdown(pageId)
       return this.n2m.toMarkdownString(mdblocks).parent
     } catch (error) {
+      if (this.shouldUseContentFallback(error)) {
+        return ""
+      }
       this.handleError(error)
     }
   }

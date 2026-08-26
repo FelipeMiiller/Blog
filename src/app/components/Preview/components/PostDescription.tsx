@@ -1,15 +1,18 @@
-import React from "react"
-
 interface Props {
   description: string
+  featured?: boolean
 }
 
-const PostDescription: React.FC<Props> = ({ description }) => {
+export default function PostDescription({ description, featured = false }: Props) {
   return (
-    <div className="prose max-w-none text-muted-foreground marker:text-accent-foreground">
-      <p>{description}</p>
-    </div>
+    <p
+      className={
+        featured
+          ? "max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg"
+          : "max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base"
+      }
+    >
+      {description}
+    </p>
   )
 }
-
-export default PostDescription

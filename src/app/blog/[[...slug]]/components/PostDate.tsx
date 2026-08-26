@@ -1,4 +1,3 @@
-import React from "react"
 import { formatDate } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/siteMetadata"
@@ -8,26 +7,14 @@ interface PostDateProps {
   updated?: string
 }
 
-const PostDate: React.FC<PostDateProps> = React.memo(({ created, updated }) => (
-  <dl className="flex items-center gap-2 text-sm">
-    <dt className="sr-only">Publicado em</dt>
-    <dd className="flex items-center gap-2 text-muted-foreground">
-      <time dateTime={created} className="font-medium">
-        {formatDate(created, siteMetadata.language)}
-      </time>
-      {updated && (
-        <>
-          <span className="text-muted-foreground/60">•</span>
-          <span className="text-xs">Atualizado:</span>
-          <time dateTime={updated} className="font-medium">
-            {formatDate(updated, siteMetadata.language)}
-          </time>
-        </>
-      )}
-    </dd>
-  </dl>
-))
-
-PostDate.displayName = "PostDate"
-
-export default PostDate
+export default function PostDate({ created, updated }: PostDateProps) {
+  return (
+    <dl className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:pt-1">
+      <dt className="sr-only">{updated ? "Atualizado em" : "Publicado em"}</dt>
+      <dd className="space-y-1">
+        <time dateTime={updated ?? created}>{formatDate(updated ?? created, siteMetadata.language)}</time>
+        {updated && <div className="text-[0.62rem] tracking-[0.14em] text-primary">Atualizado</div>}
+      </dd>
+    </dl>
+  )
+}

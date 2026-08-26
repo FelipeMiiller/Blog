@@ -1,4 +1,3 @@
-import React from "react"
 import { formatDate } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/siteMetadata"
@@ -8,19 +7,20 @@ interface Props {
   updated?: string
 }
 
-const PostMeta: React.FC<Props> = ({ created, updated }) => {
+export default function PostMeta({ created, updated }: Props) {
+  const date = updated ?? created
+
   return (
-    <dl>
-      <dt className="sr-only">Published on</dt>
-      <dd className="text-base font-medium leading-6 text-muted-foreground">
-        {updated ? (
-          <time dateTime={updated}>{formatDate(updated, siteMetadata.language)}</time>
-        ) : (
-          <time dateTime={created}>{formatDate(created)}</time>
+    <dl className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+      <dt className="sr-only">{updated ? "Updated on" : "Published on"}</dt>
+      <dd>
+        <time dateTime={date}>{formatDate(date, siteMetadata.language)}</time>
+        {updated && (
+          <span className="ml-2 text-primary" aria-label="post updated">
+            Updated
+          </span>
         )}
       </dd>
     </dl>
   )
 }
-
-export default PostMeta

@@ -4,14 +4,12 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ThemeToggle } from "@/components"
-import { Post } from "@/types"
+import { type NavItem, type Post } from "@/types"
 import { cn } from "@/utils/utils"
 
 import { siteMetadata } from "@/config/siteMetadata"
 import Search from "@/components/search"
 import { SocialIcon } from "@/components/social-icons"
-
-import { NavItem } from "../../../types"
 
 interface MainNavProps {
   items: NavItem[]
@@ -21,34 +19,38 @@ interface MainNavProps {
 export function MainNav({ items, posts }: MainNavProps) {
   const pathname = usePathname() || "/"
 
-  const title = pathname !== "/" ? pathname.split("/")[1][0].toUpperCase() + pathname.split("/")[1].slice(1) : "Home"
-
   return (
-    <nav className="flex items-center space-x-1">
-      <div className="px-2">
-        <div className="flex gap-4">
-          {items.map(
-            (item) =>
-              item.href && (
-                <Link key={item.title} href={item.href}>
-                  <span
-                    className={cn(
-                      "flex  text-sm font-medium hover:opacity-80 ",
-                      item.disabled && "cursor-not-allowed opacity-80",
-                      title === item.title && "uppercase"
-                    )}
-                    aria-label={item.title}
-                  >
-                    {item.title}
-                  </span>
-                </Link>
-              )
-          )}
-        </div>
+    <nav
+      className="flex min-w-0 max-w-full items-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      aria-label="Navegação principal"
+    >
+      <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
+        {items.map(
+          (item) =>
+            item.href && (
+              <Link
+                key={item.title}
+                href={item.href}
+                aria-current={
+                  (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)) ? "page" : undefined
+                }
+                className={cn(
+                  "group relative rounded-full px-2 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground transition-colors duration-150 ease-out hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-3 sm:text-xs",
+                  item.disabled && "pointer-events-none opacity-50",
+                  (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)) &&
+                    "bg-secondary text-foreground"
+                )}
+              >
+                {item.title}
+              </Link>
+            )
+        )}
       </div>
-      <Search posts={posts} />
-      <SocialIcon kind="github" href={siteMetadata.social.github} size={5} />
-      <ThemeToggle />
+      <div className="ml-1 flex shrink-0 items-center gap-0.5 border-l border-border/80 pl-1 sm:ml-2 sm:pl-2">
+        <Search posts={posts} />
+        <SocialIcon kind="github" href={siteMetadata.social.github} size={5} />
+        <ThemeToggle />
+      </div>
     </nav>
   )
 }

@@ -36,9 +36,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       >
         <body className={"min-h-screen  flex bg-background font-roboto  antialiased"}>
           <ThemeProvider attribute="class" defaultTheme={siteMetadata.theme} enableSystem>
-            <div className="flex h-screen flex-col   flex-1  container px-2 max-w-6xl">
+            <div className="site-shell flex min-h-screen flex-1 flex-col overflow-hidden rounded-b-[2rem] border-x border-border/60 bg-background/70 shadow-[0_24px_80px_hsl(var(--foreground)/0.08)]">
               <Header />
-              {children}
+              <main className="container flex-1 py-8 sm:py-10 lg:py-14">{children}</main>
               <Footer />
             </div>
             <TailwindIndicator />

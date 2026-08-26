@@ -26,7 +26,7 @@ Um blog moderno construído com Next.js e integrado com a API do Notion para ger
 
 ## Requisitos
 
-- Node.js 20.9 ou superior
+- Node.js 24.x
 - Yarn 1.x
 - Credenciais de uma integração do Notion para carregar os artigos
 

@@ -8,5 +8,6 @@ CHANGELOG.md
 dist
 node_modules
 .next
+next-env.d.ts
 build
 .contentlayer

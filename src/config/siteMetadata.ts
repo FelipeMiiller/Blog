@@ -1,6 +1,8 @@
 import { siteMetadataType } from "@/types"
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+import { envConfigs } from "@/config/envs"
+
+const baseUrl = envConfigs.site.baseUrl
 
 export const siteMetadata: siteMetadataType = {
   language: "pt-br",

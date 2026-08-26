@@ -1,6 +1,6 @@
-import ReactMarkdown, { Options } from "react-markdown"
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism"
+import ReactMarkdown, { type Options } from "react-markdown"
+import { Prism as SyntaxHighlighter, type SyntaxHighlighterProps } from "react-syntax-highlighter"
+import dracula from "react-syntax-highlighter/dist/cjs/styles/prism/dracula"
 import rehypeKatex from "rehype-katex"
 import rehypeRaw from "rehype-raw"
 import rehypeSanitize from "rehype-sanitize"
@@ -13,17 +13,19 @@ import "katex/dist/katex.min.css"
 import React from "react"
 import { cva, VariantProps } from "class-variance-authority"
 
-// A tipagem publicada pelo pacote ainda declara uma assinatura de componente legada.
-// O alias preserva o componente Prism em runtime e o torna compatível com React 18.3.
-const CodeHighlighter = SyntaxHighlighter as unknown as React.ComponentType<any>
+const CodeHighlighter = SyntaxHighlighter as unknown as React.ComponentType<SyntaxHighlighterProps>
+
+type HeadingProps = React.ComponentProps<"h1">
+
+type CodeProps = Omit<React.ComponentProps<"code">, "style"> & { inline?: boolean }
 
 const HeadingComponent = (level: 1 | 2 | 3 | 4 | 5 | 6) => {
-  const Component = ({ ...props }: any) => {
+  const Component = (props: HeadingProps) => {
     const extractText = (children: React.ReactNode): string => {
       return React.Children.toArray(children)
         .map((child) => {
           if (typeof child === "string") return child
-          if (React.isValidElement(child) && child.props.children) {
+          if (React.isValidElement<{ children?: React.ReactNode }>(child) && child.props.children) {
             return extractText(child.props.children)
           }
           return ""
@@ -87,7 +89,7 @@ export function MarkdownContent({ content, variant, size, className }: MarkdownP
         h4: HeadingComponent(4),
         h5: HeadingComponent(5),
         h6: HeadingComponent(6),
-        code: ({ inline, className, children, ...props }: any) => {
+        code: ({ inline, className, children, ...props }: CodeProps) => {
           const match = /language-(\w+)/.exec(className || "")
           const language = match ? match[1] : ""
 

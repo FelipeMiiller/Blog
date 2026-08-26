@@ -10,19 +10,19 @@ import { PostList, TagList, Title } from "./components"
 
 export const generateMetadata = getMetada
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: { slug: string[] | undefined }
-  searchParams?: { page?: string }
-}) {
-  const { slug } = params
+type PageProps = {
+  params: Promise<{ slug?: string[] }>
+  searchParams: Promise<{ page?: string }>
+}
+
+export default async function Page({ params, searchParams }: PageProps) {
+  const { slug } = await params
+  const resolvedSearchParams = await searchParams
   const data = await getPostsInOrderForPublished()
   if (!slug || slug[0] === "tags") {
     const postsFiltred = filterPosts(data, slug)
     const tags = getTags(postsFiltred)
-    const { totalPages, posts } = pagePosts(postsFiltred, searchParams)
+    const { totalPages, posts } = pagePosts(postsFiltred, resolvedSearchParams)
 
     return (
       <Fragment>

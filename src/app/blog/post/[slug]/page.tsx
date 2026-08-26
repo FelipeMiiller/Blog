@@ -16,8 +16,8 @@ import { TableOfContents, Title } from "./components"
 export const generateMetadata = getMetada
 export const generateStaticParams = generateStaticParamsPosts
 
-export default function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
 
   return (
     <Fragment>
@@ -58,7 +58,7 @@ async function Content({ slug }: { slug: string }) {
   )
 }
 
-async function PostSkeleton() {
+function PostSkeleton() {
   return (
     <div className="space-y-2">
       <Skeleton className="h-1/4 w-1/4" />

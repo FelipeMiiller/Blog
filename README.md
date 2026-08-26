@@ -4,8 +4,8 @@ Um blog moderno construído com Next.js e integrado com a API do Notion para ger
 
 ## Tecnologias Utilizadas
 
-- Next.js 13 com App Router
-- React 18
+- Next.js 16 com App Router e Turbopack
+- React 19
 - TypeScript
 - Tailwind CSS para estilização
 - API do Notion para gerenciamento de conteúdo
@@ -24,6 +24,12 @@ Um blog moderno construído com Next.js e integrado com a API do Notion para ger
 - Categorização e tags para posts
 - Pesquisa de conteúdo
 
+## Requisitos
+
+- Node.js 20.9 ou superior
+- Yarn 1.x
+- Credenciais de uma integração do Notion para carregar os artigos
+
 ## Como Usar
 
 ```bash
@@ -34,16 +40,25 @@ git clone https://github.com/FelipeMiiller/Blog.git
 cd Blog
 
 # Instale as dependências
-npm install
+yarn install
 
 # Configure as variáveis de ambiente
 cp .env.example .env.local
 
 # Inicie o servidor de desenvolvimento
-npm run dev
+yarn dev
 ```
 
-Acesse `http://localhost:3000` no seu navegador para ver o blog em ação.
+Acesse `http://localhost:3000` no seu navegador para ver o blog em ação. O Next.js 16 usa Turbopack por padrão no desenvolvimento e no build. Sem as credenciais do Notion, a aplicação inicia normalmente e exibe os estados vazios; nenhuma chamada inválida é feita à API.
+
+## Verificações locais
+
+```bash
+yarn typecheck
+yarn lint
+yarn test:ci
+yarn build
+```
 
 ## Configuração do Notion
 

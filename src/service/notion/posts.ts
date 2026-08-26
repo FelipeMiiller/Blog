@@ -1,7 +1,7 @@
-import { Metadata } from "next"
+import { type Metadata } from "next"
 import { envConfigs, siteMetadata } from "@/config"
 import { getTags } from "@/functions/filtersPost"
-import { GenerateMetadataProps, Post } from "@/types"
+import { type Post } from "@/types"
 
 import Notion from "./index"
 
@@ -46,8 +46,13 @@ export async function getSParams_PostsInOrderForPublished() {
   }
 }
 
-export async function getMetada({ params }: GenerateMetadataProps): Promise<Metadata> {
-  const slug = (await params)?.slug
+type MetadataProps = {
+  params?: Promise<{ slug?: string | string[] }>
+}
+
+export async function getMetada({ params }: MetadataProps = {}): Promise<Metadata> {
+  const rawSlug = (await params)?.slug
+  const slug = typeof rawSlug === "string" ? rawSlug : undefined
 
   if (slug === undefined) {
     const posts = await Notion.query({

@@ -79,14 +79,13 @@ type Page = {
 export type NotionQueryResponse = Array<Page>
 
 interface NotionInterface {
-  // eslint-disable-next-line no-unused-vars
   query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<Post[]>
-  // eslint-disable-next-line no-unused-vars
   getPageMarkdown(pageId: string): Promise<string>
 }
 
 class Notion implements NotionInterface {
   readonly databaseId = envConfigs.notion.dataBasePosts as string
+  private readonly isConfigured = Boolean(envConfigs.notion.apiKey && envConfigs.notion.dataBasePosts)
   private n2m: NotionToMarkdown
   constructor(protected notion = new Client({ auth: envConfigs.notion.apiKey })) {
     this.n2m = new NotionToMarkdown({ notionClient: notion })
@@ -107,6 +106,10 @@ class Notion implements NotionInterface {
   }
 
   async query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<Post[]> {
+    if (!this.isConfigured) {
+      return []
+    }
+
     try {
       const { results } = await this.notion.databases.query({
         database_id: this.databaseId,
@@ -122,6 +125,10 @@ class Notion implements NotionInterface {
   }
 
   async getPageMarkdown(pageId: string): Promise<string> {
+    if (!this.isConfigured) {
+      return ""
+    }
+
     try {
       const mdblocks = await this.n2m.pageToMarkdown(pageId)
       return this.n2m.toMarkdownString(mdblocks).parent
@@ -167,4 +174,6 @@ class Notion implements NotionInterface {
   }
 }
 
-export default new Notion()
+const notion = new Notion()
+
+export default notion

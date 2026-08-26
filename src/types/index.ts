@@ -60,10 +60,6 @@ export interface SearchParamsProps {
   }
 }
 
-export type GenerateMetadataProps = {
-  params: Promise<{ slug: string }>
-}
-
 export type ResponseData<T> = {
   message?: string
   status: number

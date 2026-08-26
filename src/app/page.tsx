@@ -6,6 +6,7 @@ import { getMetada, getPostsInOrderForPublished } from "@/service/notion/posts"
 import { ContentHeader, Preview } from "./components"
 
 export const generateMetadata = getMetada
+export const revalidate = 86400
 
 export default async function IndexPage() {
   const posts = await getPostsInOrderForPublished(true)

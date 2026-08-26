@@ -1,5 +1,6 @@
 import { Fragment, Suspense } from "react"
 import { notFound } from "next/navigation"
+import { envConfigs } from "@/config"
 import {
   generateStaticParamsPosts,
   getMetada,
@@ -15,6 +16,8 @@ import { TableOfContents, Title } from "./components"
 
 export const generateMetadata = getMetada
 export const generateStaticParams = generateStaticParamsPosts
+export const dynamicParams = true
+export const revalidate = 86400
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -41,8 +44,28 @@ async function Content({ slug }: { slug: string }) {
   if (!markdown) {
     return notFound()
   }
+
+  const articleStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.description,
+    datePublished: post.created,
+    dateModified: post.updated ?? post.created,
+    author: post.authors.map((author) => ({
+      "@type": "Person",
+      name: author.name,
+    })),
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${envConfigs.site.baseUrl.replace(/\/$/, "")}/blog/post/${encodeURIComponent(post.slug)}`,
+    },
+    image: [`${envConfigs.site.baseUrl.replace(/\/$/, "")}/opengraph-image`],
+  }
+
   return (
     <div className="container mx-auto px-4 py-10 lg:pt-16 lg:pb-28">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }} />
       <Title post={post} markdown={markdown} />
       <div className={cn("relative lg:flex lg:gap-8")}>
         <div className="hidden lg:block lg:w-64 shrink-0">

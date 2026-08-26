@@ -104,10 +104,33 @@ export async function getMetada({ params }: MetadataProps = {}): Promise<Metadat
       ? [siteMetadata.metadata.keywords]
       : siteMetadata.metadata.keywords || []
 
+  const post = posts[0]
+  const postUrl = `${envConfigs.site.baseUrl.replace(/\/$/, "")}/blog/post/${encodeURIComponent(post.slug)}`
+  const authors = post.authors.map((author) => author.name).filter(Boolean)
+
   return {
-    title: posts[0].title,
-    description: posts[0].description,
     ...siteMetadata.metadata,
+    title: post.title,
+    description: post.description,
+    alternates: {
+      ...siteMetadata.metadata.alternates,
+      canonical: postUrl,
+    },
+    openGraph: {
+      ...siteMetadata.metadata.openGraph,
+      type: "article" as const,
+      url: postUrl,
+      title: post.title,
+      description: post.description,
+      publishedTime: post.created,
+      modifiedTime: post.updated ?? post.created,
+      authors,
+    },
+    twitter: {
+      ...siteMetadata.metadata.twitter,
+      title: post.title,
+      description: post.description,
+    },
     keywords: [...keywords, ...tags, ...titles],
   }
 }

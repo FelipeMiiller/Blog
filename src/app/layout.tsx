@@ -1,7 +1,7 @@
 import "@/styles/globals.css"
 
 import React, { Fragment } from "react"
-import { Viewport } from "next"
+import { type Metadata, type Viewport } from "next"
 import { TailwindIndicator, ThemeProvider } from "@/components"
 import { cn } from "@/utils/utils"
 
@@ -14,7 +14,18 @@ import { Footer, Header } from "./components"
 interface RootLayoutProps {
   children: React.ReactNode
 }
+export const metadata: Metadata = siteMetadata.metadata
 export const viewport: Viewport = siteMetadata.viewport
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Felipe Miiller",
+  url: siteMetadata.metadata.metadataBase?.toString(),
+  sameAs: [siteMetadata.social.github, siteMetadata.social.linkedin],
+  jobTitle: "Desenvolvedor de software",
+}
+
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <Fragment>
@@ -23,7 +34,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={cn(roboto.variable, caveat.variable, poppins.variable)}
         suppressHydrationWarning
       >
-        <head />
         <body className={"min-h-screen  flex bg-background font-roboto  antialiased"}>
           <ThemeProvider attribute="class" defaultTheme={siteMetadata.theme} enableSystem>
             <div className="flex h-screen flex-col   flex-1  container px-2 max-w-6xl">
@@ -33,6 +43,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </div>
             <TailwindIndicator />
             <Toaster />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
           </ThemeProvider>
         </body>
       </html>

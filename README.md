@@ -49,7 +49,13 @@ cp .env.example .env.local
 yarn dev
 ```
 
-Acesse `http://localhost:3000` no seu navegador para ver o blog em ação. O Next.js 16 usa Turbopack por padrão no desenvolvimento e no build. Sem as credenciais do Notion, a aplicação inicia normalmente e exibe os estados vazios; nenhuma chamada inválida é feita à API.
+Acesse `http://localhost:3000` no seu navegador para ver o blog em ação. O Next.js 16 usa Turbopack por padrão no desenvolvimento e no build. Sem as credenciais do Notion, a aplicação inicia normalmente e exibe os estados vazios; nenhuma chamada inválida é feita à API. O conteúdo é revalidado automaticamente a cada 24 horas como fallback.
+
+## Sincronização automática com o Notion
+
+Para atualização rápida, configure uma assinatura de webhook na conexão do Notion apontando para `https://SEU_DOMINIO/api/notion/webhook`. Selecione eventos de páginas e data sources, especialmente `page.content_updated`, `page.properties_updated`, `page.created`, `page.deleted`, `page.moved`, `page.undeleted` e `data_source.content_updated`. Depois da criação, conclua a verificação da assinatura usando o `verification_token` enviado pelo Notion e salve esse valor em `NOTION_WEBHOOK_VERIFICATION_TOKEN`. Em novas conexões, use `NOTION_DATA_SOURCE_POSTS_ID`; `NOTION_DATABASE_POSTS_ID` permanece como fallback para ambientes antigos.
+
+O endpoint valida a assinatura `X-Notion-Signature`, invalida o cache das consultas do Notion e marca as páginas do blog para revalidação. O Notion envia apenas o aviso de mudança; a aplicação consulta novamente o conteúdo atualizado. Caso o webhook não seja configurado ou fique indisponível, as rotas continuam usando a revalidação automática de 24 horas.
 
 ## Verificações locais
 

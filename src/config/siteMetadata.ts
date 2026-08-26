@@ -21,8 +21,23 @@ export const siteMetadata: siteMetadataType = {
       default: "Blog - Felipe Miiller",
       template: "%s | Blog - Felipe Miiller",
     },
-    description: "Um Blog sobre desenvolvimento e análise",
+    description: "Um blog sobre desenvolvimento, análise e ideias práticas de Felipe Miiller.",
     creator: "Felipe Miiller",
+    publisher: "Felipe Miiller",
+    alternates: {
+      canonical: baseUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    },
     applicationName: "Blog - Felipe Miiller ",
     keywords: ["blog", "developer", "notion", "analysis", "analitics", "development", "dev"],
     icons: {
@@ -33,13 +48,22 @@ export const siteMetadata: siteMetadataType = {
       locale: "pt_BR",
       url: baseUrl,
       title: "Blog - Felipe Miiller",
-      description: "Um Blog sobre desenvolvimento e análise",
-      siteName: " Felipe Miiller -Blog",
+      description: "Um blog sobre desenvolvimento, análise e ideias práticas de Felipe Miiller.",
+      siteName: "Blog - Felipe Miiller",
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: "Blog de Felipe Miiller",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: "Felipe Miiller - Blog",
-      description: "",
+      description: "Um blog sobre desenvolvimento, análise e ideias práticas.",
+      images: ["/opengraph-image"],
     },
     authors: {
       name: "Felipe Miiller",

@@ -1,7 +1,8 @@
+import { unstable_cache } from "next/cache"
 import { envConfigs } from "@/config"
-import { Post } from "@/types"
+import { type Post } from "@/types"
 import { APIResponseError, Client } from "@notionhq/client"
-import { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints"
+import { QueryDataSourceParameters } from "@notionhq/client/build/src/api-endpoints"
 import GithubSlugger from "github-slugger"
 import { NotionToMarkdown } from "notion-to-md"
 
@@ -79,16 +80,29 @@ type Page = {
 export type NotionQueryResponse = Array<Page>
 
 interface NotionInterface {
-  query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<Post[]>
+  query(args: Omit<WithAuth<QueryDataSourceParameters>, "data_source_id">): Promise<Post[]>
   getPageMarkdown(pageId: string): Promise<string>
 }
 
 class Notion implements NotionInterface {
-  readonly databaseId = envConfigs.notion.dataBasePosts as string
-  private readonly isConfigured = Boolean(envConfigs.notion.apiKey && envConfigs.notion.dataBasePosts)
+  readonly dataSourceId = envConfigs.notion.dataSourcePosts as string
+  private readonly isConfigured = Boolean(envConfigs.notion.apiKey && envConfigs.notion.dataSourcePosts)
   private n2m: NotionToMarkdown
+  private readonly cachedQuery: (args: Omit<WithAuth<QueryDataSourceParameters>, "data_source_id">) => Promise<Post[]>
+  private readonly cachedPageMarkdown: (pageId: string) => Promise<string>
+
   constructor(protected notion = new Client({ auth: envConfigs.notion.apiKey })) {
     this.n2m = new NotionToMarkdown({ notionClient: notion })
+    this.cachedQuery = unstable_cache(
+      (args: Omit<WithAuth<QueryDataSourceParameters>, "data_source_id">) => this.queryUncached(args),
+      ["notion-query"],
+      { revalidate: envConfigs.pages.revalidate, tags: [envConfigs.notion.cacheTag] }
+    )
+    this.cachedPageMarkdown = unstable_cache(
+      (pageId: string) => this.getPageMarkdownUncached(pageId),
+      ["notion-page-markdown"],
+      { revalidate: envConfigs.pages.revalidate, tags: [envConfigs.notion.cacheTag] }
+    )
   }
 
   private shouldUseContentFallback(error: unknown): boolean {
@@ -105,14 +119,18 @@ class Notion implements NotionInterface {
     throw new Error("Unknown error occurred")
   }
 
-  async query(args: Omit<WithAuth<QueryDatabaseParameters>, "database_id">): Promise<Post[]> {
+  async query(args: Omit<WithAuth<QueryDataSourceParameters>, "data_source_id">): Promise<Post[]> {
     if (!this.isConfigured) {
       return []
     }
 
+    return this.cachedQuery(args)
+  }
+
+  private async queryUncached(args: Omit<WithAuth<QueryDataSourceParameters>, "data_source_id">): Promise<Post[]> {
     try {
-      const { results } = await this.notion.databases.query({
-        database_id: this.databaseId,
+      const { results } = await this.notion.dataSources.query({
+        data_source_id: this.dataSourceId,
         ...args,
       })
       return this.normalizeResponseQuery(results as unknown as NotionQueryResponse)
@@ -129,6 +147,10 @@ class Notion implements NotionInterface {
       return ""
     }
 
+    return this.cachedPageMarkdown(pageId)
+  }
+
+  private async getPageMarkdownUncached(pageId: string): Promise<string> {
     try {
       const mdblocks = await this.n2m.pageToMarkdown(pageId)
       return this.n2m.toMarkdownString(mdblocks).parent

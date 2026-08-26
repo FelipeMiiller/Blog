@@ -2,13 +2,14 @@ import { Fragment } from "react"
 import { notFound } from "next/navigation"
 import { filterPosts, getTags, pagePosts } from "@/functions/filtersPost"
 import { getMetada, getPostsInOrderForPublished } from "@/service/notion/posts"
-import { Post } from "@/types"
+import { type Post } from "@/types"
 
 import { Pagination } from "@/components/pagination"
 
 import { PostList, TagList, Title } from "./components"
 
 export const generateMetadata = getMetada
+export const revalidate = 86400
 
 type PageProps = {
   params: Promise<{ slug?: string[] }>

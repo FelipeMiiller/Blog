@@ -8,6 +8,23 @@ const SLUG_ANTIGO = "rag-na-prática-o-mapa-da-linha-de-aprendizado-e-as-sete-pe
 const SLUG_NOVO = "rag-na-prática-as-sete-peças-entre-a-sua-pergunta-e-a-resposta"
 
 const nextConfig = {
+  // Padrão do Next: 60 s por página pré-construída. O `notion-to-md` percorre o
+  // post inteiro em blocos e, quando o Notion devolve 429, o SDK espera com
+  // backoff. Alguns posts passam de 60 s — e aí o problema se multiplica: o
+  // Next descarta a página e a reconstrói do zero, o que dispara TODAS as
+  // requisições ao Notion de novo e afunda ainda mais o rate limit. Foi assim
+  // que dois deploys falharam sem mudança de código. Com 300 s a página
+  // lenta termina de uma vez, e a rajada de 429 que ela mesma provoca
+  // simplesmente não acontece.
+  staticPageGenerationTimeout: 300,
+  experimental: {
+    // Cada página pré-construída dispara uma sequência de requisições ao Notion
+    // via `notion-to-md` (o conteúdo é paginado em blocos). Sem este teto, o
+    // build abre um worker por CPU — 14 nesta máquina — e várias páginas batem
+    // no Notion ao mesmo tempo. Duas workers mantêm algum paralelismo sem
+    // estourar o rate limit.
+    cpus: 2,
+  },
   async redirects() {
     return [
       {

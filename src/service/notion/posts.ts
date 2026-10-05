@@ -160,6 +160,15 @@ export async function getMetada({ params }: MetadataProps = {}): Promise<Metadat
   }
 }
 
+/**
+ * Slugs que o Next pré-construi durante o build.
+ *
+ * Cada slug pré-construído vira uma chamada completa ao Notion via
+ * `notion-to-md` dentro do `next build`. Com ~50 posts publicados, um único
+ * post lento estourando o timeout derrubava o deploy inteiro, sem mudança de
+ * código. Aqui só entram os `prebuild_posts` mais recentes; os demais são
+ * gerados no primeiro acesso, porque a rota declara `dynamicParams = true`.
+ */
 export async function generateStaticParamsPosts(): Promise<{ slug: string }[]> {
   const titles = await Notion.query({
     filter: {
@@ -168,6 +177,13 @@ export async function generateStaticParamsPosts(): Promise<{ slug: string }[]> {
         equals: true,
       },
     },
+    sorts: [
+      {
+        property: "Created",
+        direction: "descending",
+      },
+    ],
+    page_size: envConfigs.pages.prebuild_posts,
   })
 
   const postsPaths = titles.map((post) => ({

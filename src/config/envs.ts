@@ -5,6 +5,11 @@ export const envConfigs = {
   pages: {
     posts_per_page: 5,
     revalidate: 60 * 60 * 24,
+    // Quantos posts são pré-construídos no deploy. Cada post custa uma
+    // sequência de requisições ao Notion via `notion-to-md`, e uma página
+    // lenta estoura o timeout do build e derruba o deploy inteiro. O resto
+    // é gerado sob demanda no primeiro acesso (`dynamicParams = true`).
+    prebuild_posts: 15,
   },
   notion: {
     dataSourcePosts: process.env.NOTION_DATA_SOURCE_POSTS_ID || process.env.NOTION_DATABASE_POSTS_ID,

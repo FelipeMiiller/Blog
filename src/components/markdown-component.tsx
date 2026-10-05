@@ -13,6 +13,8 @@ import "katex/dist/katex.min.css"
 import React from "react"
 import { cva, VariantProps } from "class-variance-authority"
 
+import { Mermaid } from "./mermaid"
+
 const CodeHighlighter = SyntaxHighlighter as unknown as React.ComponentType<SyntaxHighlighterProps>
 
 type HeadingProps = React.ComponentProps<"h1">
@@ -89,13 +91,45 @@ export function MarkdownContent({ content, variant, size, className }: MarkdownP
         h4: HeadingComponent(4),
         h5: HeadingComponent(5),
         h6: HeadingComponent(6),
+        pre: ({ node, children }) => {
+          // O Tailwind Typography dá a todo `pre` um fundo cinza-escuro fixo
+          // (#1f2937, igual nos dois temas) com texto claro — escolha proposital
+          // para bloco de código. Para um diagrama é o oposto do certo: o SVG sai
+          // com as cores do tema claro sobre um retângulo escuro.
+          //
+          // O react-markdown sempre envolve o `code` de bloco em um `pre`, então
+          // trocar só o renderer do `code` não resolve: o `pre` continua atrás.
+          //
+          // A decisão vem do NÓ do markdown (`node.children[0].properties
+          // .className`), não de comparar `element.type === Mermaid`. Comparar
+          // identidade de componente depende de as duas pontas importarem a MESMA
+          // instância do módulo, e isso não é uma garantia que o bundler faz — o
+          // `pre` continuava aparecendo e o diagrama continuava sobre o fundo
+          // escuro. Ler o fence é o que não depende de nada.
+          const filho = node?.children?.[0]
+          const ehDiagrama =
+            filho?.type === "element" &&
+            filho.tagName === "code" &&
+            /\blanguage-mermaid\b/.test(String(filho.properties?.className ?? ""))
+
+          if (ehDiagrama) {
+            return <>{children}</>
+          }
+          return <pre>{children}</pre>
+        },
         code: ({ inline, className, children, ...props }: CodeProps) => {
           const match = /language-(\w+)/.exec(className || "")
           const language = match ? match[1] : ""
+          const codigo = String(children).replace(/\n$/, "")
+
+          // Diagrama vai para o renderer do mermaid; o resto vai para o Prism.
+          if (!inline && language === "mermaid") {
+            return <Mermaid chart={codigo} />
+          }
 
           return !inline && match ? (
             <CodeHighlighter style={dracula} language={language} className="rounded-md" {...props}>
-              {String(children).replace(/\n$/, "")}
+              {codigo}
             </CodeHighlighter>
           ) : (
             <code className={className}>{children}</code>

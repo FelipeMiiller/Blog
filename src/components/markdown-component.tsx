@@ -55,8 +55,7 @@ const markdownContentVariants = cva("font-poppins space-y-2 flex-grow ", {
       default: "prose-img:space-y-0 prose-img:p-0 prose-img:my-0",
     },
     p: {
-      default:
-        "prose-p:flex prose-p:flex-wrap prose-p:space-y-0 prose-p:space-x-0.5 prose-p:p-0 prose-p:my-0 prose-p:h-min",
+      default: "prose-p:space-y-0 prose-p:p-0 prose-p:my-0",
     },
     h: {
       default: "prose-h:space-y-0 prose-h:p-0",

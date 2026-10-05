@@ -8,6 +8,7 @@ import {
   getPostWithMarkdown,
 } from "@/service/notion/posts"
 import { cn } from "@/utils/utils"
+import { type Post } from "@/types"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import { MarkdownContent } from "@/components/markdown-component"
@@ -22,24 +23,29 @@ export const revalidate = 86400
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
 
-  return (
-    <Fragment>
-      <Suspense fallback={<PostSkeleton />}>
-        <Content slug={slug} />
-      </Suspense>
-    </Fragment>
-  )
-}
-
-async function Content({ slug }: { slug: string }) {
+  // A busca pelo post acontece AQUI, fora do Suspense, e não dentro dele. Com o
+  // `notFound()` atrás da fronteira, o shell já tinha sido enviado com 200
+  // antes do throw, e o status não tinha mais como virar 404: a resposta saía
+  // com 200 e a página de erro embutida no fluxo — um soft-404. Resolvendo o
+  // post antes de qualquer HTML, o `notFound()` roda enquanto o status ainda é
+  // ajustável.
   const data = await getPostsInOrderForPublished()
-
-  const post = data.find((post) => post.slug === decodeURIComponent(slug))
+  const post = data.find((item) => item.slug === decodeURIComponent(slug))
 
   if (!post) {
     return notFound()
   }
 
+  return (
+    <Fragment>
+      <Suspense fallback={<PostSkeleton />}>
+        <Content post={post} />
+      </Suspense>
+    </Fragment>
+  )
+}
+
+async function Content({ post }: { post: Post }) {
   const markdown = await getPostWithMarkdown(post.page)
   if (!markdown) {
     return notFound()

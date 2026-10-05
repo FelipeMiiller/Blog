@@ -50,6 +50,31 @@ type MetadataProps = {
   params?: Promise<{ slug?: string | string[] }>
 }
 
+/**
+ * Metadados do site sem o título duplicado.
+ *
+ * `siteMetadata.metadata.title` é um objeto `{ default, template }`. Devolvê-lo
+ * como está faz o Next aplicar o template em cima do `default`, e toda rota que
+ * não resolve um post saía com "Blog - Felipe Miiller | Blog - Felipe Miiller".
+ * `absolute` diz que o título já está pronto e não leva template.
+ */
+function metadadosDoSite(): Metadata {
+  const titulo = siteMetadata.metadata.title
+  let padrao: string | undefined
+  if (typeof titulo === "string") {
+    padrao = titulo
+  } else if (titulo && "default" in titulo && typeof titulo.default === "string") {
+    // o `in` estreita o tipo sem exigir cast: o Next tipa `title` como
+    // `TemplateString`, que não declara `default`, mas o objeto do site tem.
+    padrao = titulo.default
+  }
+
+  return {
+    ...siteMetadata.metadata,
+    title: { absolute: padrao ?? "Blog - Felipe Miiller" },
+  }
+}
+
 export async function getMetada({ params }: MetadataProps = {}): Promise<Metadata> {
   const rawSlug = (await params)?.slug
   const slug = typeof rawSlug === "string" ? rawSlug : undefined
@@ -73,7 +98,7 @@ export async function getMetada({ params }: MetadataProps = {}): Promise<Metadat
         : siteMetadata.metadata.keywords || []
 
     return {
-      ...siteMetadata.metadata,
+      ...metadadosDoSite(),
       keywords: [...keywords, ...tags, ...titles],
     }
   }
@@ -94,9 +119,7 @@ export async function getMetada({ params }: MetadataProps = {}): Promise<Metadat
   )
 
   if (!post) {
-    return {
-      ...siteMetadata.metadata,
-    }
+    return metadadosDoSite()
   }
 
   const tags = [...new Set(getTags([post]).map((tag) => tag.name))]

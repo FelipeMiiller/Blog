@@ -8,6 +8,8 @@ import { siteMetadata } from "@/config/siteMetadata"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
+import { SeriesBadge } from "./seriesBadge"
+
 export default function Title({ post, markdown }: { post: Post; markdown: string }) {
   const time = readingTime(markdown)
   return (
@@ -18,6 +20,11 @@ export default function Title({ post, markdown }: { post: Post; markdown: string
           Back to blog
         </Link>
       </Button>
+      {post.serie?.name ? (
+        <div className="mb-3">
+          <SeriesBadge name={post.serie.name} />
+        </div>
+      ) : null}
       <h1 className="text-4xl font-extrabold tracking-tight mb-2">{post.title}</h1>
       <div className="flex items-center text-sm text-muted-foreground space-x-4 mb-4">
         <div className="flex items-center">

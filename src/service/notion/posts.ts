@@ -103,13 +103,14 @@ export async function getMetada({ params }: MetadataProps = {}): Promise<Metadat
     }
   }
 
-  // Não tenta remontar o título a partir do slug. O slug vem do github-slugger,
-  // que descarta pontuação: "Entity linking em 4 estágios: a normalização que
-  // salva o português" vira "entity-linking-em-4-estágios-a-normalização-que-
-  // salva-o-português". Trocar os hífens por espaços devolvia o título sem os
-  // dois-pontos, o `contains` não casava com nada e a página saía com os
-  // metadados genéricos do site: título, OpenGraph e canonical errados. O mesmo
-  // valia para hífen legítimo no título ("pt-BR" voltava como "pt BR").
+  // Não tenta remontar o título a partir do slug. O slug vem da coluna `URL`
+  // do Notion (fórmula que normaliza acentos e pontuação do título): "Entity
+  // linking em 4 estágios: a normalização que salva o português" vira
+  // "entity-linking-em-4-estágios-a-normalização-que-salva-o-português". Trocar
+  // os hífens por espaços devolveria o título sem os dois-pontos, o `contains`
+  // não casava com nada e a página saía com os metadados genéricos do site:
+  // título, OpenGraph e canonical errados. O mesmo valia para hífen legítimo no
+  // título ("pt-BR" voltava como "pt BR").
   //
   // A resolução agora casa slug com slug, na mesma lista que a página usa.
   // Reaproveitar a chamada também reaproveita o `unstable_cache` dela: nenhuma
@@ -118,6 +119,14 @@ export async function getMetada({ params }: MetadataProps = {}): Promise<Metadat
     (item) => item.slug === decodeURIComponent(slug)
   )
 
+  // Aqui NÃO se lança `notFound()`. O 404 de verdade é decidido no corpo da
+  // página (`app/blog/post/[slug]/page.tsx`), antes de qualquer HTML sair, e
+  // medir o alternative custou caro: com o `notFound()` neste metadata, o build
+  // congelava a página de erro nas 20 rotas pré-geradas — todas respondiam 404
+  // com status correto e conteúdo de artigo inexistente. O `loading.tsx` da rota
+  // também foi descartado por isso: ele faz o Next lavar o esqueleto com 200
+  // antes do componente decidir, e o slug inexistente passava a devolver um
+  // skeleton eterno em 200.
   if (!post) {
     return metadadosDoSite()
   }

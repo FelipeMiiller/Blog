@@ -42,7 +42,6 @@
     "cmdk": "^1.0.0",
     "date-fns": "^2.30.0",
     "encoding": "^0.1.13",
-    "github-slugger": "^2.0.0",
     "katex": "^0.16.11",
     "lucide-react": "^0.460.0",
     "mermaid": "^12.1.0",

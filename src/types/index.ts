@@ -8,6 +8,18 @@ export interface Tag {
   slug: string
 }
 
+/**
+ * Série a que o post pertence, lida da coluna `Serie` do Notion.
+ *
+ * `select` de propósito: um post entra em no máximo uma série. É o que separa
+ * "sou o capítulo 4 de um percurso" de "tenho as tags RAG e Busca".
+ */
+export interface Serie {
+  id: string
+  name: string
+  color: string
+}
+
 export type Post = {
   slug: string
   page: string
@@ -24,6 +36,7 @@ export type Post = {
     person: { email: string }
   }[]
   tags: Tag[]
+  serie?: Serie | null
 }
 
 export interface TagCount {

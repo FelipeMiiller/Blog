@@ -10,6 +10,9 @@ coverage
 
 # next.js
 .next/
+# builds de verificação com `NEXT_DIST_DIR` (mesma base, outro diretório)
+.next-verify*/
+.next-dev*/
 out/
 build
 .swc

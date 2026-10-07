@@ -10,10 +10,9 @@ import {
 import { cn } from "@/utils/utils"
 import { type Post } from "@/types"
 
-import { Skeleton } from "@/components/ui/skeleton"
 import { MarkdownContent } from "@/components/markdown-component"
 
-import { TableOfContents, Title } from "./components"
+import { PostSkeleton, TableOfContents, Title } from "./components"
 
 export const generateMetadata = getMetada
 export const generateStaticParams = generateStaticParamsPosts
@@ -29,6 +28,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   // com 200 e a página de erro embutida no fluxo — um soft-404. Resolvendo o
   // post antes de qualquer HTML, o `notFound()` roda enquanto o status ainda é
   // ajustável.
+  //
+  // Por isso esta rota NÃO tem `loading.tsx`. Medido com `next start`: com o
+  // arquivo, o Next lava o esqueleto com 200 no primeiro flush, o slug
+  // inexistente passava a responder 200 com skeleton eterno, e jogar o
+  // `notFound()` no `generateMetadata` para consertar congelava a página de erro
+  // nas 20 rotas pré-geradas. O estado de carregamento fica no `<Suspense>`
+  // abaixo, que cobre a espera de verdade — o `notion-to-md` percorrendo o post.
   const data = await getPostsInOrderForPublished()
   const post = data.find((item) => item.slug === decodeURIComponent(slug))
 
@@ -83,17 +89,6 @@ async function Content({ post }: { post: Post }) {
           <MarkdownContent content={markdown} />
         </article>
       </div>
-    </div>
-  )
-}
-
-function PostSkeleton() {
-  return (
-    <div className="space-y-2">
-      <Skeleton className="h-1/4 w-1/4" />
-      <Skeleton className="h-1/4 w-1/3" />
-      <Skeleton className="h-1/4 w-1/2" />
-      <Skeleton className="h-1/4 w-1/2" />
     </div>
   )
 }

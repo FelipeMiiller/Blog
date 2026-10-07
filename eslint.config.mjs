@@ -15,5 +15,8 @@ export default defineConfig([
       "react/react-in-jsx-scope": "off",
     },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "coverage/**"]),
+  // `.next*/**` e não só `.next/**`: um build de verificação com
+  // `NEXT_DIST_DIR` gera diretórios irmãos, e o ESLint passando por eles
+  // transformava o gate de segundos em minutos.
+  globalIgnores([".next*/**", "out/**", "build/**", "next-env.d.ts", "coverage/**"]),
 ])

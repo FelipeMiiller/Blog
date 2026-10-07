@@ -1,9 +1,10 @@
 import { unstable_cache } from "next/cache"
 import { envConfigs } from "@/config"
-import { type Post } from "@/types"
+import { tagDoPost } from "@/functions/cache-tags"
+import { slugify } from "@/functions/slugify"
+import { type Post, type Serie } from "@/types"
 import { APIResponseError, Client } from "@notionhq/client"
 import { QueryDataSourceParameters } from "@notionhq/client/build/src/api-endpoints"
-import GithubSlugger from "github-slugger"
 import { NotionToMarkdown } from "notion-to-md"
 
 type WithAuth<P> = P & {
@@ -54,6 +55,11 @@ type NotionMultiSelect = {
   color: string
 }
 
+type NotionFormulaValue = {
+  type: string
+  string?: string | null
+}
+
 type NotionPropertyValue = {
   id: string
   type: string
@@ -64,6 +70,8 @@ type NotionPropertyValue = {
   people: NotionPerson[]
   rich_text: NotionRichTextElement[]
   title: NotionTitleElement[]
+  formula?: NotionFormulaValue
+  select?: { id: string; name: string; color: string } | null
 }
 
 type Properties = {
@@ -89,7 +97,13 @@ class Notion implements NotionInterface {
   private readonly isConfigured = Boolean(envConfigs.notion.apiKey && envConfigs.notion.dataSourcePosts)
   private n2m: NotionToMarkdown
   private readonly cachedQuery: (args: Omit<WithAuth<QueryDataSourceParameters>, "data_source_id">) => Promise<Post[]>
-  private readonly cachedPageMarkdown: (pageId: string) => Promise<string>
+  // Uma instância de `unstable_cache` por page id. O motivo é que `tags` é
+  // estático na criação do cache: não dá para montar `notion-post-${pageId}`
+  // dentro de um único cache que recebe o pageId como argumento. Cada instância
+  // nasce com a tag já resolvida, e o webhook expira só a do post que mudou.
+  // Recriar a instância a cada invocação do servidor é inofensivo: as mesmas
+  // `keyParts` e as mesmas `tags` apontam para a mesma entrada do cache.
+  private readonly markdownPorPage = new Map<string, (pageId: string) => Promise<string>>()
 
   constructor(protected notion = new Client({ auth: envConfigs.notion.apiKey })) {
     this.n2m = new NotionToMarkdown({ notionClient: notion })
@@ -98,11 +112,23 @@ class Notion implements NotionInterface {
       ["notion-query"],
       { revalidate: envConfigs.pages.revalidate, tags: [envConfigs.notion.cacheTag] }
     )
-    this.cachedPageMarkdown = unstable_cache(
-      (pageId: string) => this.getPageMarkdownUncached(pageId),
-      ["notion-page-markdown"],
-      { revalidate: envConfigs.pages.revalidate, tags: [envConfigs.notion.cacheTag] }
+  }
+
+  private getCachedPageMarkdown(pageId: string): (pageId: string) => Promise<string> {
+    const existente = this.markdownPorPage.get(pageId)
+    if (existente) return existente
+
+    const criado = unstable_cache(
+      (id: string) => this.getPageMarkdownUncached(id),
+      ["notion-page-markdown", pageId],
+      {
+        revalidate: envConfigs.pages.revalidate,
+        tags: [tagDoPost(pageId)],
+      }
     )
+
+    this.markdownPorPage.set(pageId, criado)
+    return criado
   }
 
   private shouldUseContentFallback(error: unknown): boolean {
@@ -147,7 +173,7 @@ class Notion implements NotionInterface {
       return ""
     }
 
-    return this.cachedPageMarkdown(pageId)
+    return this.getCachedPageMarkdown(pageId)(pageId)
   }
 
   private async getPageMarkdownUncached(pageId: string): Promise<string> {
@@ -176,21 +202,73 @@ class Notion implements NotionInterface {
     )
   }
 
+  /**
+   * Slug vindo da coluna de fórmula do Notion (`URL`).
+   *
+   * A fórmula devolve o slug já percent-encoded — `busca-h%C3%ADbrida-...` —
+   * porque é assim que a coluna serve para colar a URL pronta. O resto do site
+   * trabalha com o slug cru e aplica `encodeURIComponent` só na hora de montar
+   * o link (`page.tsx` e `getMetada` decodificam o parâmetro da rota, o sitemap
+   * e o canonical codificam). Decodificar aqui mantém esse contrato: sem isso
+   * todo consumidor passaria a codificar duas vezes e a URL viraria
+   * `...%25C3%25AD...`, que não casa com nenhuma rota.
+   *
+   * Coluna vazia ou com escape inválido devolve string vazia. A postagem não é
+   * pulada por isso: `isValidRow` não olha slug, então ela continua na
+   * listagem do blog — apenas não ganha página própria.
+   */
+  private readSlugFromNotion(row: Page): string {
+    const propriedades = row.properties ?? {}
+    // `URL` é o nome que a coluna tem no database desde que virou fórmula. O
+    // segundo matcher é rede de segurança caso ela seja renomeada.
+    const chave =
+      propriedades.URL ?? Object.entries(propriedades).find(([nome]) => /url|slug/i.test(nome))?.[1]
+
+    const bruto = chave?.formula?.string
+    if (typeof bruto !== "string" || bruto.trim() === "") {
+      return ""
+    }
+
+    try {
+      const decodificado = decodeURIComponent(bruto)
+      return decodificado.trim() === "" ? "" : decodificado
+    } catch {
+      return ""
+    }
+  }
+
+  /**
+   * Série do post, da coluna `Serie` do Notion.
+   *
+   * `select` de valor único, e opcional: os 59 posts que existiam antes da
+   * série RAG têm a coluna vazia, e é por isso que `isValidRow` não a exige —
+   * exigi-la apagaria da listagem tudo que foi publicado até hoje.
+   */
+  private readSerieFromNotion(row: Page): Serie | null {
+    const sel = row.properties?.Serie?.select
+
+    if (!sel?.name) {
+      return null
+    }
+
+    return { id: sel.id, name: sel.name, color: sel.color }
+  }
+
   private mapRowToPost = (row: Page): Post => {
-    const slugger = new GithubSlugger()
     return {
-      slug: slugger.slug(row.properties.Page.title[0].text.content),
+      slug: this.readSlugFromNotion(row),
       page: row.id,
       authors: row.properties.Authors.people,
       title: row.properties.Page.title[0].text.content,
       updated: row.properties.Updated.last_edited_time,
       created: row.properties.Created.created_time,
       description: row.properties.Description.rich_text[0].text.content,
+      serie: this.readSerieFromNotion(row),
       tags: row.properties.Categories.multi_select.map((item) => ({
         id: item.id,
         name: item.name,
         color: item.color,
-        slug: slugger.slug(item.name),
+        slug: slugify(item.name),
       })),
     }
   }

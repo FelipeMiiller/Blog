@@ -1,6 +1,7 @@
 import { Fragment, Suspense } from "react"
 import { notFound } from "next/navigation"
 import { envConfigs } from "@/config"
+import { postsDaSerie } from "@/functions/filtersPost"
 import {
   generateStaticParamsPosts,
   getMetada,
@@ -12,7 +13,7 @@ import { type Post } from "@/types"
 
 import { MarkdownContent } from "@/components/markdown-component"
 
-import { PostSkeleton, TableOfContents, Title } from "./components"
+import { PostSkeleton, SeriesNav, TableOfContents, Title } from "./components"
 
 export const generateMetadata = getMetada
 export const generateStaticParams = generateStaticParamsPosts
@@ -45,13 +46,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   return (
     <Fragment>
       <Suspense fallback={<PostSkeleton />}>
-        <Content post={post} />
+        <Content post={post} postsDaSerie={post.serie?.name ? postsDaSerie(data, post.serie.name) : []} />
       </Suspense>
     </Fragment>
   )
 }
 
-async function Content({ post }: { post: Post }) {
+async function Content({ post, postsDaSerie: serie }: { post: Post; postsDaSerie: Post[] }) {
   const markdown = await getPostWithMarkdown(post.page)
   if (!markdown) {
     return notFound()
@@ -80,10 +81,17 @@ async function Content({ post }: { post: Post }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }} />
       <Title post={post} markdown={markdown} />
       <div className={cn("relative lg:flex lg:gap-8")}>
+        {/*
+          A coluna esquerda não é mais um bloco `sticky` único. Com a lista da
+          série em cima, um wrapper sticky deixaria o sumário empurrado para
+          fora da tela para sempre — ele ficaria preso no topo de um bloco alto
+          demais para caber. O sumário já é sticky por conta própria
+          (`sticky top-16` no TableOfContents): a lista rola away e o sumário
+          gruda, que é o comportamento desejado.
+        */}
         <div className="hidden lg:block lg:w-64 shrink-0">
-          <div className="sticky top-4">
-            <TableOfContents markdown={markdown} />
-          </div>
+          {post.serie?.name ? <SeriesNav name={post.serie.name} posts={serie} currentSlug={post.slug} /> : null}
+          <TableOfContents markdown={markdown} />
         </div>
         <article className="flex-grow prose dark:prose-invert max-w-3xl ">
           <MarkdownContent content={markdown} />

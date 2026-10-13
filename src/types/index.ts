@@ -45,6 +45,13 @@ export interface TagCount {
   slug: string
 }
 
+/** Uma série com a contagem de posts, para a lateral do `/blog`. */
+export interface SerieCount {
+  name: string
+  count: number
+  slug: string
+}
+
 export type NavItem = {
   title: string
   href: string

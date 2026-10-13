@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 import { notFound } from "next/navigation"
-import { filterPosts, getSeries, getTags, ordemDaSerie, pagePosts } from "@/functions/filtersPost"
+import { decodificar, existeSecao, filterPosts, getSeries, getTags, ordemDaSerie, pagePosts } from "@/functions/filtersPost"
 import { getMetada, getPostsInOrderForPublished } from "@/service/notion/posts"
 import { type Post } from "@/types"
 
@@ -30,6 +30,17 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   if (!slug || (secao !== undefined && SECOES_DA_LISTAGEM.includes(secao))) {
     const ehSerie = secao === "serie"
+    const param = alvo === undefined ? undefined : decodificar(alvo)
+
+    // `/blog/tags/xyz` e `/blog/serie/xyz` sem alvo real não são listagem: são
+    // 404. Sem esta checagem, qualquer coisa digitada na URL devolvia 200 com a
+    // lista vazia — página fina com status de sucesso, que é o pior dos dois
+    // mundos para o buscador. O `decodificar` devolve `null` em escape inválido
+    // (`%ZZ`), que caía em 500 e também é 404 do ponto de vista de quem visitou.
+    if (param !== undefined && (param === null || !existeSecao(data, secao, param))) {
+      return notFound()
+    }
+
     const filtrados = filterPosts(data, slug)
     // Numa página de série a ordem é a de leitura (prefixo numérico do slug),
     // não "mais novo primeiro": a série existe para ser percorrida na ordem,
@@ -41,7 +52,7 @@ export default async function Page({ params, searchParams }: PageProps) {
     // As séries saem da lista inteira: a lateral precisa oferecer as outras
     // séries como destino, não só a que está em tela.
     const series = getSeries(data)
-    const serieAtual = ehSerie ? series.find((serie) => decodeURIComponent(alvo ?? "") === serie.slug) : undefined
+    const serieAtual = ehSerie ? series.find((serie) => serie.slug.toLowerCase() === String(param).toLowerCase()) : undefined
     const { totalPages, posts } = pagePosts(postsFiltred, resolvedSearchParams)
 
     return (

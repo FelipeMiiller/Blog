@@ -80,6 +80,12 @@ function postsDaSerie(posts: Post[], nome: string): Post[] {
  *
  * A seção é o primeiro segmento (`slug[0]`) e o alvo é o segundo. Sem alvo
  * (`/blog`), devolve tudo — o que a rota já tratava antes deste filtro existir.
+ *
+ * O alvo casa por slug OU por nome, sem diferenciar maiúsculas de minúsculas.
+ * As duas formas precisam usar a MESMA regra: quando a checagem de existência
+ * aceitava "Python" mas o filtro só aceitava "python", `/blog/tags/Python`
+ * passava pela verificação e caía numa lista vazia com 200 — exatamente o
+ * soft-404 que a rota passou a recusar.
  */
 function filterPosts(posts: Post[], slug: string[] | undefined): Post[] {
   const alvo = slug?.[1]
@@ -87,12 +93,20 @@ function filterPosts(posts: Post[], slug: string[] | undefined): Post[] {
 
   const param = decodeURIComponent(alvo)
   const secao = slug?.[0]
+  const alvoNormalizado = param.toLowerCase()
 
   if (secao === "serie") {
-    return posts.filter((post) => post.serie?.name && slugify(post.serie.name) === param)
+    return posts.filter(
+      (post) => post.serie?.name && slugify(post.serie.name).toLowerCase() === alvoNormalizado
+    )
   }
 
-  return posts.filter((post) => post.tags.some((tag: Tag) => tag.slug === param))
+  return posts.filter(
+    (post) =>
+      post.tags.some(
+        (tag: Tag) => tag.slug.toLowerCase() === alvoNormalizado || tag.name.toLowerCase() === alvoNormalizado
+      )
+  )
 }
 
 function pagePosts(posts: Post[], searchParams?: { page?: string }): { posts: Post[]; totalPages: number } {
@@ -108,4 +122,43 @@ function pagePosts(posts: Post[], searchParams?: { page?: string }): { posts: Po
   }
 }
 
-export { filterPosts, getSeries, getTags, ordemDaSerie, pagePosts, postsDaSerie }
+/**
+ * O alvo da URL existe de verdade?
+ *
+ * `/blog/tags/xyz` e `/blog/serie/xyz` devolviam 200 com a lista vazia para
+ * qualquer coisa digitada na URL, e página vazia com 200 é justamente o que o
+ * buscador indexa como conteúdo. Agora o chamador transforma "não existe" em
+ * 404 de verdade.
+ *
+ * Aceita o slug e o nome, porque os dois aparecem em URLs antigas: o `TagList`
+ * já comparava as duasformas ao marcar o item atual.
+ */
+function existeSecao(posts: Post[], secao: string | undefined, param: string): boolean {
+  const alvo = param.toLowerCase()
+
+  if (secao === "serie") {
+    return getSeries(posts).some((serie) => serie.slug.toLowerCase() === alvo || serie.name.toLowerCase() === alvo)
+  }
+
+  return getTags(posts).some((tag) => tag.slug.toLowerCase() === alvo || tag.name.toLowerCase() === alvo)
+}
+
+/** `decodeURIComponent` que não estoura com escape inválido (`%ZZ`, `%E0%A4%A`). */
+function decodificar(valor: string): string | null {
+  try {
+    return decodeURIComponent(valor)
+  } catch {
+    return null
+  }
+}
+
+export {
+  decodificar,
+  existeSecao,
+  filterPosts,
+  getSeries,
+  getTags,
+  ordemDaSerie,
+  pagePosts,
+  postsDaSerie,
+}
